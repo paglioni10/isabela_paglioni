@@ -6,12 +6,10 @@ export default function About() {
       <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-center gap-16">
           
-          {/* Lado da Foto - Seguindo o estilo da Hero */}
+          {/* Lado da Foto */}
           <div className="relative w-full lg:w-1/2 aspect-[4/5] max-w-md">
-            {/* Efeito visual de fundo (blur rosa) */}
             <div className="absolute -inset-4 bg-pink-200/30 rounded-[40px] rotate-6 blur-2xl"></div>
             
-            {/* Moldura da Foto */}
             <div className="relative h-full w-full rounded-[32px] overflow-hidden shadow-2xl border-[12px] border-white rotate-2 hover:rotate-0 transition-all duration-700 z-10">
               <Image
                 src="/foto_isa_1.jpg" 
@@ -25,7 +23,6 @@ export default function About() {
 
           {/* Lado do Texto */}
           <div className="w-full lg:w-1/2">
-            {/* Selo padrão Hero */}
             <span className="inline-block text-[#DB2777] font-bold tracking-[0.3em] uppercase text-xs mb-6 border-b-2 border-pink-200 pb-2">
               Especialista em Organização
             </span>
@@ -47,8 +44,8 @@ export default function About() {
               </p>
             </div>
 
-            {/* Estatísticas Harmonizadas */}
-            <div className="mt-12 pt-10 border-t border-pink-100 flex gap-12">
+            {/* Estatísticas - ESCONDIDAS NO CELULAR (hidden), APARECEM NO DESKTOP (md:flex) */}
+            <div className="hidden md:flex mt-12 pt-10 border-t border-pink-100 gap-12">
               <div>
                 <p className="text-4xl font-serif font-bold text-gray-900">+100</p>
                 <p className="text-xs text-[#DB2777] font-bold uppercase tracking-[0.2em] mt-1">Projetos</p>
