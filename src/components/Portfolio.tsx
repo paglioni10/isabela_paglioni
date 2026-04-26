@@ -22,9 +22,16 @@ export default function Portfolio({ projects }: PortfolioProps) {
   const safeProjects = projects || []
   const categories = ['todos', ...Array.from(new Set(safeProjects.map(p => p.category).filter(Boolean)))]
 
-  const filteredProjects = filter === 'todos' 
-    ? safeProjects 
-    : safeProjects.filter(p => p.category === filter)
+  // Lógica de filtro + Agrupamento por categoria no "todos"
+  const filteredProjects = safeProjects
+    .filter(p => filter === 'todos' || p.category === filter)
+    .sort((a, b) => {
+      // Se estiver no "todos", organiza alfabeticamente pela categoria para manter os grupos juntos
+      if (filter === 'todos') {
+        return (a.category || '').localeCompare(b.category || '');
+      }
+      return 0;
+    });
 
   return (
     <section id="portfolio" className="py-24 bg-[#FFF5F7]">
@@ -44,7 +51,7 @@ export default function Portfolio({ projects }: PortfolioProps) {
           </p>
         </div>
 
-        {/* Botões de Filtro - Estilo coerente com o CTA da Hero */}
+        {/* Botões de Filtro */}
         <div className="flex flex-wrap justify-center gap-3 mb-16">
           {categories.map((cat) => (
             <button
