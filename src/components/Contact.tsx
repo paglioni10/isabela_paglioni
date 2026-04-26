@@ -2,10 +2,7 @@ import { MessageCircle, Instagram, Mail, MapPin } from 'lucide-react'
 
 export default function Contact() {
   const whatsappNumber = "5548984863549" 
-  // Defina aqui a mesma mensagem que você usou no botão flutuante
   const message = "Olá Isabela! Vi seu site e gostaria de saber mais sobre seus serviços de organização."
-  
-  // Codifica a mensagem para ser usada na URL
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`
   
   return (
@@ -30,22 +27,25 @@ export default function Contact() {
               </p>
 
               <div className="space-y-6">
-                <div className="flex items-center gap-5 text-gray-700">
-                  <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm text-[#DB2777]">
+                {/* Email */}
+                <div className="flex items-center gap-5 text-gray-700 group">
+                  <div className="flex-shrink-0 w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm text-[#DB2777]">
                     <Mail size={22} />
                   </div>
-                  <span className="text-lg">isa.paglioni@hotmail.com</span>
+                  <span className="text-lg break-all">isa.paglioni@hotmail.com</span>
                 </div>
                 
-                <div className="flex items-center gap-5 text-gray-700">
-                  <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm text-[#DB2777]">
+                {/* Instagram */}
+                <div className="flex items-center gap-5 text-gray-700 group">
+                  <div className="flex-shrink-0 w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm text-[#DB2777]">
                     <Instagram size={22} />
                   </div>
                   <span className="text-lg">@isa.paglioniorganizer</span>
                 </div>
 
-                <div className="flex items-center gap-5 text-gray-700">
-                  <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm text-[#DB2777]">
+                {/* Localização */}
+                <div className="flex items-center gap-5 text-gray-700 group">
+                  <div className="flex-shrink-0 w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm text-[#DB2777]">
                     <MapPin size={22} />
                   </div>
                   <span className="text-lg">Florianópolis e Região</span>
