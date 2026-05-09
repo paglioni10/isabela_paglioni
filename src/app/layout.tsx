@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Header from "../components/Header";
 import SocialButtons from "../components/SocialButtons";
+import Script from "next/script"; // Importação necessária para o Clarity
 
 const inter = Inter({ 
   subsets: ["latin"], 
@@ -27,6 +28,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR" className="scroll-smooth">
+      <head>
+        {/* Microsoft Clarity Tracking Script */}
+        <Script id="microsoft-clarity" strategy="afterInteractive">
+          {`
+            (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "wo2izteoc9");
+          `}
+        </Script>
+      </head>
       <body className={`${inter.variable} ${playfair.variable} font-sans antialiased bg-[#FFF5F7] text-gray-900`}>
         <Header />
         
@@ -36,16 +49,19 @@ export default function RootLayout({
 
         <SocialButtons />
         
-        {/* Opcional: Script para garantir que o scroll suave funcione em todos os browsers */}
+        {/* Script para scroll suave */}
         <script 
           dangerouslySetInnerHTML={{
             __html: `
               document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                   e.preventDefault();
-                  document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                  });
+                  const target = document.querySelector(this.getAttribute('href'));
+                  if (target) {
+                    target.scrollIntoView({
+                      behavior: 'smooth'
+                    });
+                  }
                 });
               });
             `
