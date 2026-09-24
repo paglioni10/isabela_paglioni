@@ -10,8 +10,8 @@ import { client } from '../sanity/lib/client'
 
 async function getData() {
   try {
-    const services = await client.fetch(`*[_type == "service"]{ title, description, icon }`)
-    const projects = await client.fetch(`*[_type == "portfolio"]{ _id, title, category, mainImage }`)
+    const services = await client.fetch(`*[_type == "service"] | order(orderRank asc, title asc) { title, description, icon }`)
+    const projects = await client.fetch(`*[_type == "portfolio"] | order(orderRank asc, title asc) { _id, title, category, mainImage }`)
     const testimonials = await client.fetch(`*[_type == "testimonial"]{ clientName, videoUrl, image }`)
     const tips = await client.fetch(`*[_type == "dicas"]{ title, videoUrl }`)
 

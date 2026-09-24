@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity'
 import { Images } from 'lucide-react'
+import { orderRankField, orderRankOrdering } from '@sanity/orderable-document-list'
 
 export const PORTFOLIO_CATEGORIES = [
   { title: 'Cozinha', value: 'Cozinha' },
@@ -18,6 +19,7 @@ export default defineType({
   title: 'Portfólio',
   icon: Images,
   fields: [
+    orderRankField({ type: 'portfolio' }),
     defineField({
       name: 'mainImage',
       type: 'image',
@@ -51,6 +53,7 @@ export default defineType({
     }),
   },
   orderings: [
+    { ...orderRankOrdering, title: 'Ordem do site' },
     { title: 'Nome (A–Z)', name: 'titleAsc', by: [{ field: 'title', direction: 'asc' }] },
     { title: 'Categoria', name: 'categoryAsc', by: [{ field: 'category', direction: 'asc' }] },
   ],

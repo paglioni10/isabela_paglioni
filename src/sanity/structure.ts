@@ -1,4 +1,5 @@
 import type { StructureResolver } from 'sanity/structure'
+import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list'
 import { FolderOpen, HandHeart, Images, Lightbulb, MessageCircleHeart } from 'lucide-react'
 import { PORTFOLIO_CATEGORIES } from './schemaTypes/portfolio'
 
@@ -7,7 +8,7 @@ const toId = (text: string) =>
   text.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase()
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
-export const structure: StructureResolver = (S) =>
+export const structure: StructureResolver = (S, context) =>
   S.list()
     .title('O que você quer editar?')
     .items([
@@ -16,35 +17,57 @@ export const structure: StructureResolver = (S) =>
         .icon(Images)
         .child(
           S.list()
-            .title('Portfólio')
+            .title('Portfólio (arraste para ordenar dentro de cada categoria)')
             .items([
               S.listItem()
                 .title('Todas as fotos')
                 .icon(Images)
                 .child(S.documentTypeList('portfolio').title('Todas as fotos')),
               S.divider(),
-              ...PORTFOLIO_CATEGORIES.map(({ title, value }) => {
-                const id = `portfolio-${toId(value)}`
-                return S.listItem()
-                  .id(id)
-                  .title(title)
-                  .icon(FolderOpen)
-                  .child(
-                    S.documentList()
-                      .id(`${id}-lista`)
-                      .title(title)
-                      .schemaType('portfolio')
-                      .filter('_type == "portfolio" && category == $category')
-                      .params({ category: value })
-                      .initialValueTemplates([
-                        S.initialValueTemplateItem('portfolio-por-categoria', { category: value }),
-                      ])
-                  )
-              }),
+              // Cada categoria é uma lista de arrastar e soltar
+              ...PORTFOLIO_CATEGORIES.map(({ title, value }) =>
+                orderableDocumentListDeskItem({
+                  type: 'portfolio',
+                  id: `portfolio-${toId(value)}`,
+                  title,
+                  icon: FolderOpen,
+                  filter: 'category == $category',
+                  params: { category: value },
+                  createIntent: false,
+                  menuItems: [
+                    S.menuItem()
+                      .title(`Adicionar foto em ${title}`)
+                      .intent({
+                        type: 'create',
+                        params: [
+                          { type: 'portfolio', template: 'portfolio-por-categoria' },
+                          { category: value },
+                        ],
+                      })
+                      .serialize(),
+                  ],
+                  S,
+                  context,
+                })
+              ),
             ])
         ),
       S.divider(),
-      S.documentTypeListItem('service').title('Serviços').icon(HandHeart),
+      orderableDocumentListDeskItem({
+        type: 'service',
+        id: 'servicos',
+        title: 'Serviços',
+        icon: HandHeart,
+        createIntent: false,
+        menuItems: [
+          S.menuItem()
+            .title('Adicionar serviço')
+            .intent({ type: 'create', params: { type: 'service' } })
+            .serialize(),
+        ],
+        S,
+        context,
+      }),
       S.documentTypeListItem('testimonial').title('Depoimentos').icon(MessageCircleHeart),
       S.documentTypeListItem('dicas').title('Dicas de Organização').icon(Lightbulb),
     ])

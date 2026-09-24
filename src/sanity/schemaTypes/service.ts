@@ -1,6 +1,7 @@
 import { createElement } from 'react'
 import { defineType, defineField } from 'sanity'
 import { HandHeart, Sparkles } from 'lucide-react'
+import { orderRankField, orderRankOrdering } from '@sanity/orderable-document-list'
 import { IconPicker, getIcon } from '../components/IconPicker'
 
 export default defineType({
@@ -8,7 +9,9 @@ export default defineType({
   title: 'Serviços',
   type: 'document',
   icon: HandHeart,
+  orderings: [{ ...orderRankOrdering, title: 'Ordem do site' }],
   fields: [
+    orderRankField({ type: 'service' }),
     defineField({
       name: 'title',
       title: 'Nome do serviço',
