@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Header from "../components/Header";
 import SocialButtons from "../components/SocialButtons";
+import HideOnAdmin from "../components/HideOnAdmin";
 import Script from "next/script"; // Importação necessária para o Clarity
 
 const inter = Inter({ 
@@ -41,13 +42,17 @@ export default function RootLayout({
         </Script>
       </head>
       <body className={`${inter.variable} ${playfair.variable} font-sans antialiased bg-[#FFF5F7] text-gray-900`}>
-        <Header />
+        <HideOnAdmin>
+          <Header />
+        </HideOnAdmin>
         
         <main className="min-h-screen">
           {children}
         </main>
 
-        <SocialButtons />
+        <HideOnAdmin>
+          <SocialButtons />
+        </HideOnAdmin>
         
         {/* Script para scroll suave */}
         <script 

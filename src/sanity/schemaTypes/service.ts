@@ -1,24 +1,46 @@
-export default {
+import { createElement } from 'react'
+import { defineType, defineField } from 'sanity'
+import { HandHeart, Sparkles } from 'lucide-react'
+import { IconPicker, getIcon } from '../components/IconPicker'
+
+export default defineType({
   name: 'service',
   title: 'Serviços',
   type: 'document',
+  icon: HandHeart,
   fields: [
-    {
+    defineField({
       name: 'title',
-      title: 'Título do Serviço',
+      title: 'Nome do serviço',
       type: 'string',
-    },
-    {
+      description: 'Ex: “Organização Residencial”.',
+      validation: (rule) => rule.required().error('Dê um nome ao serviço.'),
+    }),
+    defineField({
       name: 'description',
       title: 'Descrição',
       type: 'text',
       rows: 3,
-    },
-    {
+      description: 'Um texto curto explicando o serviço (ideal: até 200 caracteres).',
+      validation: (rule) => [
+        rule.required().error('Escreva uma descrição.'),
+        rule.max(200).warning('Textos longos podem ficar cansativos no card. Tente resumir.'),
+      ],
+    }),
+    defineField({
       name: 'icon',
-      title: 'Ícone (Nome do Lucide)',
+      title: 'Ícone',
       type: 'string',
-      description: 'Acesse lucide.dev para ver as opções. Digite o nome exatamente como aparece lá (ex: Wine, Heart, Star).',
-    },
+      description: 'Clique no ícone que melhor representa o serviço.',
+      components: { input: IconPicker },
+    }),
   ],
-}
+  preview: {
+    select: { title: 'title', subtitle: 'description', icon: 'icon' },
+    prepare: ({ title, subtitle, icon }) => ({
+      title: title || 'Serviço sem nome',
+      subtitle,
+      media: createElement(getIcon(icon) ?? Sparkles),
+    }),
+  },
+})
