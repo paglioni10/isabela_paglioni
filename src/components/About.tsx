@@ -41,8 +41,8 @@ export default function About() {
               </p>
             </div>
 
-            {/* Estatísticas - ESCONDIDAS NO CELULAR (hidden), APARECEM NO DESKTOP (md:flex) */}
-            <div className="hidden md:flex mt-12 pt-10 border-t border-pink-100 gap-12">
+            {/* Estatísticas */}
+            <div className="flex justify-center lg:justify-start mt-10 md:mt-12 pt-8 md:pt-10 border-t border-pink-100 gap-12">
               <div>
                 <p className="text-4xl font-serif font-bold text-gray-900">+100</p>
                 <p className="text-xs text-[#DB2777] font-bold uppercase tracking-[0.2em] mt-1">Projetos</p>
