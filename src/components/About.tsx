@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { Star } from 'lucide-react'
 
 export default function About() {
   return (
@@ -47,7 +48,9 @@ export default function About() {
                 <p className="text-xs text-[#DB2777] font-bold uppercase tracking-[0.2em] mt-1">Projetos</p>
               </div>
               <div>
-                <p className="text-4xl font-serif font-bold text-gray-900">5★</p>
+                <p className="text-4xl font-serif font-bold text-gray-900 flex items-center gap-1.5">
+                  5 <Star className="w-7 h-7 text-[#DB2777]" fill="currentColor" aria-label="estrelas" />
+                </p>
                 <p className="text-xs text-[#DB2777] font-bold uppercase tracking-[0.2em] mt-1">Avaliação</p>
               </div>
             </div>

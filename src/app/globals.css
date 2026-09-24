@@ -26,9 +26,9 @@ body {
 
 /* Foco visível para quem navega pelo teclado */
 :where(a, button, [tabindex]):focus-visible {
+  /* O contorno segue o arredondamento do próprio elemento */
   outline: 2px solid var(--brand);
-  outline-offset: 3px;
-  border-radius: 9999px;
+  outline-offset: 4px;
 }
 
 @media (prefers-reduced-motion: reduce) {

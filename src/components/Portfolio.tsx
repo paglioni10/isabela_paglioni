@@ -101,10 +101,13 @@ export default function Portfolio({ projects }: PortfolioProps) {
                   )}
                 </div>
                 
-                <div className="p-8 text-center">
-                  <span className="text-[10px] uppercase tracking-[0.2em] text-[#DB2777] font-bold mb-3 block">
-                    {project.category || 'Geral'}
-                  </span>
+                <div className="px-8 py-6 text-center">
+                  {/* Só mostra a categoria quando o título ainda não a menciona */}
+                  {project.category && !project.title?.toLowerCase().includes(project.category.toLowerCase()) && (
+                    <span className="text-[11px] uppercase tracking-[0.2em] text-[#BE185D] font-bold mb-3 block">
+                      {project.category}
+                    </span>
+                  )}
                   <h3 className="text-2xl font-serif font-bold text-gray-900 group-hover:text-[#DB2777] transition-colors duration-300">
                     {project.title}
                   </h3>

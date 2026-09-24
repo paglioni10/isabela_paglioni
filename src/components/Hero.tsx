@@ -46,8 +46,8 @@ export default function Hero() {
               />
             </div>
 
-            {/* Frase Flutuante (Desktop) */}
-            <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-2xl shadow-xl hidden md:block border border-pink-50 max-w-[200px]">
+            {/* Frase flutuante (desktop), à esquerda para não ficar sob os botões fixos */}
+            <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-[0_12px_32px_rgba(219,39,119,0.12)] hidden md:block border border-pink-50 max-w-[200px]">
               <p className="text-[#DB2777] font-serif italic text-lg leading-tight">
                 “Organização é liberdade!”
               </p>
