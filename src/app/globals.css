@@ -4,8 +4,48 @@
 
 :root {
   --background: #FFF5F7;
+  --brand: #DB2777;
+  --brand-strong: #BE185D;
+  --ink: #111827;
+}
+
+html {
+  /* Os links do menu param abaixo do header fixo (80px) */
+  scroll-padding-top: 5rem;
+  accent-color: var(--brand);
 }
 
 body {
   background-color: var(--background);
+}
+
+::selection {
+  background-color: #FBCFE8;
+  color: var(--ink);
+}
+
+/* Foco visível para quem navega pelo teclado */
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+  border-radius: 9999px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* Mantém trocas de cor, mas tira deslocamentos, zooms e rotações */
+  *,
+  *::before,
+  *::after {
+    transition-property: color, background-color, border-color, opacity, box-shadow !important;
+  }
+
+  .hover\:rotate-0:hover,
+  .-rotate-2,
+  .rotate-2 {
+    --tw-rotate: 0deg !important;
+  }
 }

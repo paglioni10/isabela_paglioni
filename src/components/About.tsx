@@ -3,11 +3,11 @@ import Image from 'next/image'
 export default function About() {
   return (
     <section id="sobre" className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-center gap-16">
           
           {/* Lado da Foto */}
-          <div className="relative w-full lg:w-1/2 aspect-[4/5] max-w-md">
+          <div className="relative w-full lg:w-1/2 aspect-[4/5] max-w-md mx-auto lg:mx-0">
             <div className="absolute -inset-4 bg-pink-200/30 rounded-[40px] rotate-6 blur-2xl"></div>
             
             <div className="relative h-full w-full rounded-[32px] overflow-hidden shadow-2xl border-[12px] border-white rotate-2 hover:rotate-0 transition-all duration-700 z-10">
@@ -15,24 +15,20 @@ export default function About() {
                 src="/foto_isa_1.jpg" 
                 alt="Isabela Paglioni - Personal Organizer"
                 fill
+                sizes="(min-width: 1024px) 448px, 90vw"
                 className="object-cover"
-                priority
               />
             </div>
           </div>
 
           {/* Lado do Texto */}
           <div className="w-full lg:w-1/2">
-            <span className="inline-block text-[#DB2777] font-bold tracking-[0.3em] uppercase text-xs mb-6 border-b-2 border-pink-200 pb-2">
-              Especialista em Organização
-            </span>
-
-            <h2 className="text-4xl md:text-6xl font-serif font-bold text-gray-900 mb-8 leading-[1.1]">
+            <h2 className="text-4xl md:text-6xl font-serif font-bold text-gray-900 mb-8 leading-[1.1] text-balance">
               Transformando espaços, <br /> 
               <span className="text-[#DB2777] italic">renovando vidas.</span>
             </h2>
             
-            <div className="space-y-6 text-gray-600 text-lg leading-relaxed antialiased">
+            <div className="space-y-6 text-gray-600 text-lg leading-relaxed max-w-[62ch]">
               <p>
                 Olá! Eu sou a <strong className="text-gray-900 font-bold">Isabela Paglioni</strong>. Minha missão é ajudar pessoas a recuperarem o prazer de estar em casa através da organização inteligente e personalizada.
               </p>

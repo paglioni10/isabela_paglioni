@@ -5,6 +5,8 @@ export default function Contact() {
   const message = "Olá Isabela! Vi seu site e gostaria de saber mais sobre seus serviços de organização."
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`
   
+  const iconBox = "flex-shrink-0 w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-[0_2px_8px_rgba(219,39,119,0.08)] text-[#DB2777]"
+
   return (
     <section id="contato" className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -13,11 +15,7 @@ export default function Contact() {
             
             {/* Lado Esquerdo: Informações de Contato */}
             <div className="p-10 md:p-16">
-              <span className="inline-block text-[#DB2777] font-bold tracking-[0.3em] uppercase text-xs mb-6 border-b-2 border-pink-200 pb-2">
-                Contato
-              </span>
-
-              <h2 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-8 leading-[1.1]">
+              <h2 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-6 leading-[1.1] text-balance">
                 Vamos organizar o <br />
                 <span className="text-[#DB2777] italic">seu espaço?</span>
               </h2>
@@ -26,37 +24,35 @@ export default function Contact() {
                 Agende uma visita ou tire suas dúvidas. Terei o maior prazer em transformar a sua rotina através da organização inteligente.
               </p>
 
-              <div className="space-y-6">
+              <ul className="space-y-4">
                 {/* Email */}
-                <div className="flex items-center gap-5 text-gray-700 group">
-                  <div className="flex-shrink-0 w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm text-[#DB2777]">
-                    <Mail size={22} />
-                  </div>
-                  <span className="text-lg break-all">isa.paglioni@hotmail.com</span>
-                </div>
+                <li>
+                  <a href="mailto:isa.paglioni@hotmail.com" className="flex items-center gap-5 text-gray-700 group rounded-2xl hover:text-[#DB2777] transition-colors">
+                    <span className={iconBox} aria-hidden="true"><Mail size={22} /></span>
+                    <span className="text-lg [overflow-wrap:anywhere] underline decoration-pink-200 underline-offset-4 group-hover:decoration-[#DB2777]">isa.paglioni@hotmail.com</span>
+                  </a>
+                </li>
                 
                 {/* Instagram */}
-                <div className="flex items-center gap-5 text-gray-700 group">
-                  <div className="flex-shrink-0 w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm text-[#DB2777]">
-                    <Instagram size={22} />
-                  </div>
-                  <span className="text-lg">@isa.paglioniorganizer</span>
-                </div>
+                <li>
+                  <a href="https://www.instagram.com/isa.paglioniorganizer" target="_blank" rel="noopener noreferrer" className="flex items-center gap-5 text-gray-700 group rounded-2xl hover:text-[#DB2777] transition-colors">
+                    <span className={iconBox} aria-hidden="true"><Instagram size={22} /></span>
+                    <span className="text-lg [overflow-wrap:anywhere] underline decoration-pink-200 underline-offset-4 group-hover:decoration-[#DB2777]">@isa.paglioniorganizer</span>
+                  </a>
+                </li>
 
                 {/* Localização */}
-                <div className="flex items-center gap-5 text-gray-700 group">
-                  <div className="flex-shrink-0 w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm text-[#DB2777]">
-                    <MapPin size={22} />
-                  </div>
+                <li className="flex items-center gap-5 text-gray-700">
+                  <span className={iconBox} aria-hidden="true"><MapPin size={22} /></span>
                   <span className="text-lg">Florianópolis e Região</span>
-                </div>
-              </div>
+                </li>
+              </ul>
             </div>
 
             {/* Lado Direito: Chamada para Ação (WhatsApp) */}
             <div className="bg-[#FADADD]/20 p-10 md:p-16 flex flex-col justify-center items-center">
               <div className="bg-white p-10 rounded-[32px] shadow-xl shadow-pink-100/20 w-full max-w-sm text-center border border-pink-50">
-                <div className="w-20 h-20 bg-[#FFF5F7] rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="w-20 h-20 bg-[#FFF5F7] rounded-full flex items-center justify-center mx-auto mb-6" aria-hidden="true">
                   <MessageCircle size={40} className="text-[#DB2777]" />
                 </div>
                 
@@ -70,9 +66,9 @@ export default function Contact() {
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block w-full bg-gray-900 text-white font-bold py-5 rounded-2xl hover:bg-[#DB2777] transition-all shadow-lg hover:shadow-[#DB2777]/20 text-center uppercase tracking-widest text-xs"
+                  className="inline-block w-full bg-gray-900 text-white font-bold py-5 rounded-2xl hover:bg-[#DB2777] transition-colors shadow-[0_10px_24px_rgba(17,24,39,0.18)] text-center uppercase tracking-widest text-xs"
                 >
-                  Enviar Mensagem
+                  Chamar no WhatsApp
                 </a>
               </div>
             </div>
@@ -80,7 +76,7 @@ export default function Contact() {
         </div>
         
         {/* Rodapé */}
-        <div className="mt-16 text-center text-gray-400 text-[10px] tracking-[0.1em] uppercase">
+        <footer className="mt-16 text-center text-gray-500 text-[11px] tracking-[0.1em] uppercase">
           <p>© {new Date().getFullYear()} Isabela Personal Organizer. Todos os direitos reservados.</p>
           <p className="mt-3">
             Desenvolvido por{" "}
@@ -88,12 +84,12 @@ export default function Contact() {
               href="https://www.linkedin.com/in/nicolas-pietro-paglioni-0287a2369" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-[#DB2777] hover:text-gray-900 transition-colors font-bold"
+              className="text-[#BE185D] hover:text-gray-900 transition-colors font-bold"
             >
               Nicolas Pietro Paglioni
             </a>
           </p>
-        </div>
+        </footer>
       </div>
     </section>
   )

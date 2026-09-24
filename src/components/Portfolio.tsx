@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { urlFor } from '../sanity/lib/image'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, MotionConfig } from 'framer-motion'
 
 interface Project {
   _id: string 
@@ -34,15 +34,12 @@ export default function Portfolio({ projects }: PortfolioProps) {
     });
 
   return (
+    <MotionConfig reducedMotion="user">
     <section id="portfolio" className="py-24 bg-[#FFF5F7]">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         
         <div className="text-center mb-16">
-          <span className="inline-block text-[#DB2777] font-bold tracking-[0.3em] uppercase text-xs mb-6 border-b-2 border-pink-200 pb-2">
-            Portfólio Selecionado
-          </span>
-          
-          <h2 className="text-4xl md:text-6xl font-serif font-bold text-gray-900 mb-8 leading-[1.1]">
+          <h2 className="text-4xl md:text-6xl font-serif font-bold text-gray-900 mb-6 leading-[1.1] text-balance">
             Transformações <span className="text-[#DB2777] italic">reais.</span>
           </h2>
           
@@ -52,14 +49,16 @@ export default function Portfolio({ projects }: PortfolioProps) {
         </div>
 
         {/* Botões de Filtro */}
-        <div className="flex flex-wrap justify-center gap-3 mb-16">
+        <div className="flex flex-wrap justify-center gap-2.5 mb-14" role="group" aria-label="Filtrar projetos por categoria">
           {categories.map((cat) => (
             <button
               key={cat}
+              type="button"
               onClick={() => setFilter(cat)}
-              className={`px-8 py-3 rounded-full border transition-all duration-300 text-xs font-bold uppercase tracking-widest
+              aria-pressed={filter === cat}
+              className={`px-6 md:px-8 min-h-11 rounded-full border transition-colors duration-300 text-xs font-bold uppercase tracking-widest
                 ${filter === cat 
-                  ? 'bg-gray-900 text-white border-gray-900 shadow-xl' 
+                  ? 'bg-gray-900 text-white border-gray-900 shadow-[0_8px_20px_rgba(17,24,39,0.18)]' 
                   : 'bg-white text-gray-600 border-pink-100 hover:border-[#DB2777] hover:text-[#DB2777]'
                 }`}
             >
@@ -84,7 +83,7 @@ export default function Portfolio({ projects }: PortfolioProps) {
                   duration: 0.4,
                   layout: { duration: 0.4, ease: "easeInOut" } 
                 }}
-                className="group bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500"
+                className="group bg-white rounded-[32px] overflow-hidden shadow-[0_2px_12px_rgba(219,39,119,0.06)] hover:shadow-[0_18px_40px_rgba(219,39,119,0.12)] transition-shadow duration-500"
               >
                 <div className="relative h-80 w-full overflow-hidden bg-gray-100">
                   {project.mainImage ? (
@@ -92,14 +91,14 @@ export default function Portfolio({ projects }: PortfolioProps) {
                       src={urlFor(project.mainImage).width(800).url()}
                       alt={project.title}
                       fill
-                      className="object-cover transition-transform duration-1000 ease-out scale-110 group-hover:scale-100"
+                      sizes="(min-width: 1024px) 400px, (min-width: 768px) 50vw, 100vw"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />
                   ) : (
-                    <div className="flex items-center justify-center h-full text-gray-300 italic">
+                    <div className="flex items-center justify-center h-full text-gray-500 italic">
                       Sem imagem cadastrada
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
                 
                 <div className="p-8 text-center">
@@ -116,15 +115,12 @@ export default function Portfolio({ projects }: PortfolioProps) {
         </motion.div>
 
         {filteredProjects.length === 0 && (
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center text-gray-500 mt-10"
-          >
+          <p className="text-center text-gray-600 mt-10">
             Nenhum projeto encontrado nesta categoria.
-          </motion.p>
+          </p>
         )}
       </div>
     </section>
+    </MotionConfig>
   )
 }

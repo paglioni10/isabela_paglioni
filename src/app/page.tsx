@@ -31,7 +31,7 @@ export default async function Home() {
   const { services, projects, testimonials, tips } = await getData()
 
   return (
-    <main className="min-h-screen">
+    <>
       {/* 1. Introdução */}
       <Hero />
 
@@ -39,11 +39,7 @@ export default async function Home() {
       <About />
 
       {/* 3. Serviços */}
-      <Services 
-        services={services.length > 0 ? services : [
-          { title: "Organização", description: "Carregando serviços...", icon: "Sparkles" }
-        ]} 
-      />
+      <Services services={services} />
 
       {/* 4. O seu Processo de Trabalho */}
       <Process />
@@ -59,6 +55,6 @@ export default async function Home() {
 
       {/* 8. Contato e seu Rodapé */}
       <Contact />
-    </main>
+    </>
   )
 }
