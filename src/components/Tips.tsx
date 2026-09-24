@@ -13,7 +13,7 @@ export default function Tips({ tips }: { tips: any[] }) {
           </h2>
 
           <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Pequenas mudanças e estratégias simples que transformam a sua rotina e organização.
+            Truques simples para manter a casa organizada no dia a dia.
           </p>
         </div>
 

@@ -12,11 +12,11 @@ export default function Services({ services }: { services: any[] }) {
         
         <div className="text-center mb-20">
           <h2 className="text-4xl md:text-6xl font-serif font-bold text-gray-900 mb-6 leading-[1.1] text-balance">
-            Nossos <span className="text-[#DB2777] italic">serviços.</span>
+            Como posso <span className="text-[#DB2777] italic">ajudar você.</span>
           </h2>
           
           <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Soluções práticas para trazer harmonia e funcionalidade ao seu lar.
+            Da chegada do bebê à mudança de casa: cada serviço é planejado para a sua rotina e para continuar em ordem depois da organização.
           </p>
         </div>
 

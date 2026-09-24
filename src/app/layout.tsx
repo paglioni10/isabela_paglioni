@@ -18,7 +18,7 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: "Isabela Paglioni | Personal Organizer",
-  description: "Transformando lares em espaços de harmonia e bem-estar através da organização estratégica.",
+  description: "Personal organizer em Florianópolis e região. Organização de closets, cozinhas, quarto do bebê e mudanças, pensada para ser fácil de manter no dia a dia.",
   keywords: ["Personal Organizer", "Organização Residencial", "Organização Baby", "Mudanças", "Isabela Paglioni"],
 };
 

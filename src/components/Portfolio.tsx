@@ -44,7 +44,7 @@ export default function Portfolio({ projects }: PortfolioProps) {
           </h2>
           
           <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Explore alguns dos nossos projetos e veja como a organização pode transformar o seu dia a dia e trazer harmonia para sua casa.
+            Fotos de ambientes que organizei. Filtre por cômodo para ver o que combina com a sua casa.
           </p>
         </div>
 

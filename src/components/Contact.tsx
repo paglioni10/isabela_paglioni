@@ -21,7 +21,7 @@ export default function Contact() {
               </h2>
 
               <p className="text-lg text-gray-600 mb-10 leading-relaxed">
-                Agende uma visita ou tire suas dúvidas. Terei o maior prazer em transformar a sua rotina através da organização inteligente.
+                Me conte o que você quer organizar. Pelo WhatsApp eu tiro suas dúvidas e combinamos uma visita.
               </p>
 
               <ul className="space-y-4">
@@ -56,10 +56,10 @@ export default function Contact() {
                   <MessageCircle size={40} className="text-[#DB2777]" />
                 </div>
                 
-                <h3 className="font-serif text-2xl text-gray-900 mb-3 font-bold">Atendimento Imediato</h3>
+                <h3 className="font-serif text-2xl text-gray-900 mb-3 font-bold">Fale direto comigo</h3>
                 
                 <p className="text-gray-600 mb-10 text-base leading-relaxed">
-                  Clique abaixo para falar diretamente comigo pelo WhatsApp.
+                  A conversa abre no WhatsApp com uma mensagem pronta. É só enviar.
                 </p>
 
                 <a 
@@ -77,7 +77,7 @@ export default function Contact() {
         
         {/* Rodapé */}
         <footer className="mt-16 text-center text-gray-500 text-[11px] tracking-[0.1em] uppercase">
-          <p>© {new Date().getFullYear()} Isabela Personal Organizer. Todos os direitos reservados.</p>
+          <p>© {new Date().getFullYear()} Isa Paglioni Personal Organizer. Todos os direitos reservados.</p>
           <p className="mt-3">
             Desenvolvido por{" "}
             <a 

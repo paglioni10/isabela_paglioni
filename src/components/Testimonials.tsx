@@ -13,7 +13,7 @@ export default function Testimonials({ data }: { data: any[] }) {
           </h2>
 
           <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Histórias reais de quem transformou o lar e a rotina com a Isabela.
+            Clientes contando, com as próprias palavras, como foi a experiência.
           </p>
         </div>
 
