@@ -2,6 +2,10 @@ import type { StructureResolver } from 'sanity/structure'
 import { FolderOpen, HandHeart, Images, Lightbulb, MessageCircleHeart } from 'lucide-react'
 import { PORTFOLIO_CATEGORIES } from './schemaTypes/portfolio'
 
+// IDs da estrutura não aceitam acentos/espaços (ex: "Escritório" -> "escritorio")
+const toId = (text: string) =>
+  text.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase()
+
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = (S) =>
   S.list()
@@ -19,13 +23,15 @@ export const structure: StructureResolver = (S) =>
                 .icon(Images)
                 .child(S.documentTypeList('portfolio').title('Todas as fotos')),
               S.divider(),
-              ...PORTFOLIO_CATEGORIES.map(({ title, value }) =>
-                S.listItem()
-                  .id(`portfolio-${value}`)
+              ...PORTFOLIO_CATEGORIES.map(({ title, value }) => {
+                const id = `portfolio-${toId(value)}`
+                return S.listItem()
+                  .id(id)
                   .title(title)
                   .icon(FolderOpen)
                   .child(
                     S.documentList()
+                      .id(`${id}-lista`)
                       .title(title)
                       .schemaType('portfolio')
                       .filter('_type == "portfolio" && category == $category')
@@ -34,7 +40,7 @@ export const structure: StructureResolver = (S) =>
                         S.initialValueTemplateItem('portfolio-por-categoria', { category: value }),
                       ])
                   )
-              ),
+              }),
             ])
         ),
       S.divider(),
