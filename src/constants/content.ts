@@ -1,6 +1,6 @@
 export const SITE_CONTENT = {
   // Endereço oficial do site (usado no canonical, sitemap e prévias de link)
-  url: "https://isabela-paglioni.vercel.app",
+  url: "https://www.isapaglioni.com.br",
   contact: {
     phone: "+55 48 98486-3549",
     phoneDisplay: "(48) 98486-3549",
