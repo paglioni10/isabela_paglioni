@@ -3,11 +3,11 @@
 export const FAQ = [
   {
     q: 'Como é feito o orçamento?',
-    a: 'Pelo WhatsApp. Você me manda fotos ou vídeos dos ambientes e eu passo o valor, sem precisar de visita. O valor geralmente é por dia de trabalho, e eu informo na conversa.',
+    a: 'Pelo WhatsApp. Você me manda fotos ou vídeos dos ambientes e eu passo o valor, sem precisar de visita. Normalmente cobro por dia de trabalho.',
   },
   {
     q: 'O que está incluso na organização de mudança?',
-    a: 'Tudo, do começo ao fim: planejamento e desapego antes de embalar, embalagem com etiquetas por cômodo e conteúdo, acompanhamento no dia da mudança orientando os carregadores e, na casa nova, desembalar e organizar cada ambiente.',
+    a: 'Planejamento e desapego antes de embalar, embalagem com etiquetas por cômodo, acompanhamento no dia da mudança e, na casa nova, desembalar e organizar cada cômodo.',
   },
   {
     q: 'Você organiza só mudanças?',

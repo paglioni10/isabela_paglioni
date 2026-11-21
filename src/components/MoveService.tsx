@@ -4,22 +4,22 @@ const steps = [
   {
     icon: ClipboardList,
     title: 'Planejamento e desapego',
-    text: 'Antes de embalar, separamos juntas o que vai, o que doa e o que descarta. Mudança é a melhor hora para levar só o que faz sentido.',
+    text: 'Antes de embalar, separo com você o que vai, o que doa e o que descarta. É a melhor hora para desapegar e não levar peso à toa.',
   },
   {
     icon: PackageCheck,
     title: 'Embalagem com etiquetas',
-    text: 'Embalo tudo com cuidado e identifico cada caixa por cômodo e conteúdo. Nada de abrir dez caixas para achar a cafeteira.',
+    text: 'Embalo tudo com cuidado e etiqueto cada caixa por cômodo e conteúdo. Na casa nova, você acha a cafeteira sem abrir dez caixas.',
   },
   {
     icon: Truck,
     title: 'Acompanhamento no dia',
-    text: 'No dia da mudança eu estou lá, orientando os carregadores para cada caixa ir direto para o cômodo certo.',
+    text: 'No dia da mudança eu estou lá e oriento os carregadores a levar cada caixa direto para o cômodo certo.',
   },
   {
     icon: Home,
     title: 'Casa nova organizada',
-    text: 'Desembalo e organizo cada ambiente para funcionar na sua rotina, de um jeito fácil de manter no dia a dia.',
+    text: 'Desembalo e organizo cada cômodo pensando na sua rotina, para a casa continuar em ordem depois.',
   },
 ]
 
