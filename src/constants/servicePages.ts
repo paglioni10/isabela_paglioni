@@ -26,7 +26,7 @@ export const SERVICE_PAGES: ServicePage[] = [
       'Personal organizer especialista em mudanças: desapego, embalagem com etiquetas, acompanhamento no dia e casa nova organizada. Orçamento pelo WhatsApp.',
     h1: 'Organização de mudança em Palhoça e Grande Florianópolis',
     intro:
-      'Mudança é a minha especialidade. Cuido de tudo, do desapego antes de embalar até a casa nova arrumada e funcionando.',
+      'Mudança é a minha especialidade. Cuido de tudo, do desapego antes de embalar até a casa nova organizada e funcionando.',
     steps: MOVE_STEPS,
     photoCategories: ['Cozinha', 'Closet', 'Despensa', 'Cristaleira', 'Baby', 'Lavanderia', 'Escritório', 'Mudança'],
     photosTitle: 'Ambientes que organizei',
