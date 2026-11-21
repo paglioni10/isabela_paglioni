@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "../components/Header";
 import SocialButtons from "../components/SocialButtons";
 import HideOnAdmin from "../components/HideOnAdmin";
+import WhatsAppTracking from "../components/WhatsAppTracking";
 import Script from "next/script"; // Importação necessária para o Clarity
 import { SITE_CONTENT } from "../constants/content";
 
@@ -66,6 +67,7 @@ export default function RootLayout({
 
         <HideOnAdmin>
           <SocialButtons />
+          <WhatsAppTracking />
         </HideOnAdmin>
         
       </body>

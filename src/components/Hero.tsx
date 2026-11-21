@@ -20,6 +20,7 @@ export default function Hero() {
 
           <a 
             href={SITE_CONTENT.hero.ctaLink}
+            data-whatsapp="topo"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-gray-900 text-white px-10 py-5 rounded-full font-bold text-sm uppercase tracking-widest hover:bg-[#DB2777] transition-colors shadow-[0_12px_32px_rgba(17,24,39,0.22)] text-center inline-block"

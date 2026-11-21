@@ -28,7 +28,7 @@ export default function Contact() {
               <ul className="space-y-4">
                 {/* Telefone em texto: ajuda o Google a ligar o número ao negócio */}
                 <li>
-                  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-5 text-gray-700 group rounded-2xl hover:text-[#DB2777] transition-colors">
+                  <a href={whatsappUrl} data-whatsapp="contato_telefone" target="_blank" rel="noopener noreferrer" className="flex items-center gap-5 text-gray-700 group rounded-2xl hover:text-[#DB2777] transition-colors">
                     <span className={iconBox} aria-hidden="true"><Phone size={22} /></span>
                     <span className="text-lg"><span className="underline decoration-pink-200 underline-offset-4 group-hover:decoration-[#DB2777]">{SITE_CONTENT.contact.phoneDisplay}</span> <span className="text-gray-500">(WhatsApp)</span></span>
                   </a>
@@ -73,6 +73,7 @@ export default function Contact() {
 
                 <a 
                   href={whatsappUrl}
+                  data-whatsapp="contato_botao"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block w-full bg-gray-900 text-white font-bold py-5 rounded-2xl hover:bg-[#DB2777] transition-colors shadow-[0_10px_24px_rgba(17,24,39,0.18)] text-center uppercase tracking-widest text-xs"

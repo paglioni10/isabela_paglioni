@@ -24,6 +24,7 @@ export default function SocialButtons() {
 
       <a
         href={SITE_CONTENT.hero.ctaLink}
+        data-whatsapp="flutuante"
         target="_blank"
         rel="noopener noreferrer"
         className={`${button} bg-[#25D366]`}
