@@ -6,6 +6,7 @@ import Portfolio from '../components/Portfolio'
 import Testimonials from '../components/Testimonials'
 import Tips from '../components/Tips'
 import Contact from '../components/Contact'
+import StructuredData from '../components/StructuredData'
 import { client } from '../sanity/lib/client'
 
 async function getData() {
@@ -32,6 +33,8 @@ export default async function Home() {
 
   return (
     <>
+      <StructuredData services={services} />
+
       {/* 1. Introdução */}
       <Hero />
 

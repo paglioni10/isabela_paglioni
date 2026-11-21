@@ -1,4 +1,5 @@
-import { MessageCircle, Instagram, Mail, MapPin } from 'lucide-react'
+import { MessageCircle, Instagram, Mail, MapPin, Phone } from 'lucide-react'
+import { SITE_CONTENT } from '../constants/content'
 
 export default function Contact() {
   const whatsappNumber = "5548984863549" 
@@ -25,6 +26,14 @@ export default function Contact() {
               </p>
 
               <ul className="space-y-4">
+                {/* Telefone em texto: ajuda o Google a ligar o número ao negócio */}
+                <li>
+                  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-5 text-gray-700 group rounded-2xl hover:text-[#DB2777] transition-colors">
+                    <span className={iconBox} aria-hidden="true"><Phone size={22} /></span>
+                    <span className="text-lg"><span className="underline decoration-pink-200 underline-offset-4 group-hover:decoration-[#DB2777]">{SITE_CONTENT.contact.phoneDisplay}</span> <span className="text-gray-500">(WhatsApp)</span></span>
+                  </a>
+                </li>
+
                 {/* Email */}
                 <li>
                   <a href="mailto:isa.paglioni@hotmail.com" className="flex items-center gap-5 text-gray-700 group rounded-2xl hover:text-[#DB2777] transition-colors">
@@ -44,7 +53,7 @@ export default function Contact() {
                 {/* Localização */}
                 <li className="flex items-center gap-5 text-gray-700">
                   <span className={iconBox} aria-hidden="true"><MapPin size={22} /></span>
-                  <span className="text-lg">Florianópolis e Região</span>
+                  <span className="text-lg">{SITE_CONTENT.contact.region}</span>
                 </li>
               </ul>
             </div>

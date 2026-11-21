@@ -1,4 +1,13 @@
 export const SITE_CONTENT = {
+  // Endereço oficial do site (usado no canonical, sitemap e prévias de link)
+  url: "https://isabela-paglioni.vercel.app",
+  contact: {
+    phone: "+55 48 98486-3549",
+    phoneDisplay: "(48) 98486-3549",
+    email: "isa.paglioni@hotmail.com",
+    instagram: "https://www.instagram.com/isa.paglioniorganizer",
+    region: "Palhoça e Grande Florianópolis",
+  },
   brand: {
     name: "Isa Paglioni",
     title: "Personal Organizer",

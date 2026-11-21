@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import SocialButtons from "../components/SocialButtons";
 import HideOnAdmin from "../components/HideOnAdmin";
 import Script from "next/script"; // Importação necessária para o Clarity
+import { SITE_CONTENT } from "../constants/content";
 
 const inter = Inter({ 
   subsets: ["latin"], 
@@ -16,10 +17,23 @@ const playfair = Playfair_Display({
   variable: "--font-playfair" 
 });
 
+const title = "Personal Organizer em Palhoça e Florianópolis | Mudanças – Isa Paglioni";
+const description = "Personal organizer especialista em mudanças em Palhoça e Grande Florianópolis. Embalo, desembalo e organizo a casa inteira, fácil de manter.";
+
 export const metadata: Metadata = {
-  title: "Isabela Paglioni | Personal Organizer",
-  description: "Personal organizer especialista em mudanças em Palhoça e Grande Florianópolis. Embalo, desembalo e organizo a casa inteira: closets, cozinhas, quarto do bebê, de um jeito fácil de manter no dia a dia.",
-  keywords: ["Personal Organizer", "Organização Residencial", "Organização Baby", "Mudanças", "Isabela Paglioni"],
+  metadataBase: new URL(SITE_CONTENT.url),
+  title,
+  description,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    url: "/",
+    siteName: "Isa Paglioni Personal Organizer",
+    title,
+    description,
+  },
+  twitter: { card: "summary_large_image", title, description },
 };
 
 export default function RootLayout({
