@@ -18,7 +18,7 @@ const playfair = Playfair_Display({
   variable: "--font-playfair" 
 });
 
-const title = "Personal Organizer em Palhoça e Florianópolis | Mudanças – Isa Paglioni";
+const title = "Personal Organizer em Palhoça e Florianópolis | Isa Paglioni";
 const description = "Personal organizer especialista em mudanças em Palhoça e Grande Florianópolis. Embalo, desembalo e organizo a casa inteira, fácil de manter.";
 
 export const metadata: Metadata = {
