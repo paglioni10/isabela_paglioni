@@ -1,4 +1,5 @@
 import { SITE_CONTENT } from '../constants/content'
+import { FAQ } from '../constants/faq'
 
 // Dados estruturados (JSON-LD): explicam ao Google e às IAs quem é a Isa,
 // o que ela faz e onde atende. Não incluir avaliações (AggregateRating) sem
@@ -52,6 +53,15 @@ export default function StructuredData({ services }: { services: { title?: strin
         image: `${url}/foto_isa.jpg`,
         sameAs: [contact.instagram],
         worksFor: { '@id': `${url}/#negocio` },
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': `${url}/#duvidas`,
+        mainEntity: FAQ.map((item) => ({
+          '@type': 'Question',
+          name: item.q,
+          acceptedAnswer: { '@type': 'Answer', text: item.a },
+        })),
       },
       {
         '@type': 'WebSite',

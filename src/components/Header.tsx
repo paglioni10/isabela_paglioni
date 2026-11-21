@@ -8,6 +8,7 @@ const menuLinks = [
   { href: "#home", label: "Início" },
   { href: "#sobre", label: "Sobre" },
   { href: "#servicos", label: "Serviços" },
+  { href: "#mudanca", label: "Mudança" },
   { href: "#processo", label: "Processo" },
   { href: "#portfolio", label: "Portfólio" },
   { href: "#depoimentos", label: "Depoimentos" },
@@ -39,7 +40,7 @@ export default function Header() {
         </a>
 
         {/* DESKTOP NAV */}
-        <nav className="hidden md:flex items-center gap-6 lg:gap-8" aria-label="Menu principal">
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-8" aria-label="Menu principal">
           {menuLinks.map((link) => (
             <a
               key={link.href}
@@ -60,7 +61,7 @@ export default function Header() {
         {/* MOBILE BUTTON */}
         <button
           type="button"
-          className="md:hidden -mr-2 w-11 h-11 flex items-center justify-center rounded-full text-gray-900"
+          className="lg:hidden -mr-2 w-11 h-11 flex items-center justify-center rounded-full text-gray-900"
           onClick={() => setIsOpen(!isOpen)}
           aria-label={isOpen ? 'Fechar menu' : 'Abrir menu'}
           aria-expanded={isOpen}
@@ -76,7 +77,7 @@ export default function Header() {
         aria-label="Menu principal"
         inert={!isOpen}
         className={`
-          md:hidden absolute top-20 left-0 right-0 bg-white border-b border-pink-50 shadow-[0_12px_24px_rgba(17,24,39,0.06)] transition-all duration-300 ease-out overflow-hidden
+          lg:hidden absolute top-20 left-0 right-0 bg-white border-b border-pink-50 shadow-[0_12px_24px_rgba(17,24,39,0.06)] transition-all duration-300 ease-out overflow-hidden
           ${isOpen ? 'max-h-[520px] opacity-100' : 'max-h-0 opacity-0'}
         `}
       >

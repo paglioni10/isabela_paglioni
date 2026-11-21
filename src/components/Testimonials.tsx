@@ -26,8 +26,11 @@ export default function Testimonials({ data }: { data: any[] }) {
               <div className="relative aspect-[9/16] w-full rounded-[26px] overflow-hidden bg-gray-900">
                 <YouTubeVideo url={item.videoUrl} title={`Depoimento de ${item.clientName}`} />
               </div>
-              <figcaption className="font-serif text-2xl text-gray-900 font-bold text-center pt-5 pb-2 px-2">
-                {item.clientName}
+              <figcaption className="text-center pt-5 pb-2 px-2">
+                {item.quote && (
+                  <blockquote className="text-gray-600 italic leading-relaxed mb-3">“{item.quote}”</blockquote>
+                )}
+                <span className="font-serif text-2xl text-gray-900 font-bold">{item.clientName}</span>
               </figcaption>
             </figure>
           ))}

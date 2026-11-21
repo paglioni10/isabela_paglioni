@@ -26,6 +26,14 @@ export default defineType({
         ),
     }),
     defineField({
+      name: 'quote',
+      title: 'Frase da cliente (opcional)',
+      type: 'text',
+      rows: 3,
+      description: 'Uma ou duas frases do que a cliente disse, entre aspas no site. O Google não lê vídeos, então o texto ajuda a aparecer nas buscas.',
+      validation: (rule) => rule.max(280).warning('Frases curtas funcionam melhor (até 280 caracteres).'),
+    }),
+    defineField({
       name: 'image',
       title: 'Foto da cliente (opcional)',
       type: 'image',

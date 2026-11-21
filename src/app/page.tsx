@@ -7,13 +7,15 @@ import Testimonials from '../components/Testimonials'
 import Tips from '../components/Tips'
 import Contact from '../components/Contact'
 import StructuredData from '../components/StructuredData'
+import MoveService from '../components/MoveService'
+import Faq from '../components/Faq'
 import { client } from '../sanity/lib/client'
 
 async function getData() {
   try {
     const services = await client.fetch(`*[_type == "service"] | order(orderRank asc, title asc) { title, description, icon }`)
     const projects = await client.fetch(`*[_type == "portfolio"] | order(orderRank asc, title asc) { _id, title, category, mainImage }`)
-    const testimonials = await client.fetch(`*[_type == "testimonial"]{ clientName, videoUrl, image }`)
+    const testimonials = await client.fetch(`*[_type == "testimonial"]{ clientName, videoUrl, image, quote }`)
     const tips = await client.fetch(`*[_type == "dicas"]{ title, videoUrl }`)
 
     return {
@@ -44,6 +46,9 @@ export default async function Home() {
       {/* 3. Serviços */}
       <Services services={services} />
 
+      {/* Carro-chefe: organização de mudança */}
+      <MoveService />
+
       {/* 4. O seu Processo de Trabalho */}
       <Process />
 
@@ -57,6 +62,8 @@ export default async function Home() {
       <Tips tips={tips} />
 
       {/* 8. Contato e seu Rodapé */}
+      <Faq />
+
       <Contact />
     </>
   )
