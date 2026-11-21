@@ -2,6 +2,7 @@
 
 import { LucideProps } from 'lucide-react'
 import * as LucideIcons from 'lucide-react'
+import { servicePageHref } from '../constants/servicePages'
 
 export default function Services({ services }: { services: any[] }) {
   if (!services || services.length === 0) return null
@@ -46,6 +47,15 @@ export default function Services({ services }: { services: any[] }) {
                   <p className="text-gray-600 text-base leading-relaxed">
                     {service.description}
                   </p>
+
+                  {servicePageHref(service.title) && (
+                    <a
+                      href={servicePageHref(service.title)}
+                      className="mt-6 inline-block text-[#BE185D] font-bold underline underline-offset-4 hover:text-gray-900"
+                    >
+                      Saiba mais<span className="sr-only"> sobre {service.title}</span>
+                    </a>
+                  )}
                 </div>
               </li>
             )

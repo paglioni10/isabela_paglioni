@@ -1,3 +1,4 @@
+import { GENERAL_STEPS } from '../constants/steps'
 import YouTubeVideo from './YouTubeVideo'
 
 export default function Process() {
@@ -17,18 +18,14 @@ export default function Process() {
             </p>
 
             <ol className="space-y-6">
-              {[
-                { n: "1", t: "Conversa inicial", d: "Entendo o que incomoda você hoje e como é a rotina da casa." },
-                { n: "2", t: "Planejamento", d: "Monto um plano sob medida para o seu espaço." },
-                { n: "3", t: "Execução", d: "Organizo tudo com você e deixo um sistema fácil de manter no dia a dia." }
-              ].map((step) => (
-                <li key={step.n} className="flex items-start gap-5">
+              {GENERAL_STEPS.map((step, i) => (
+                <li key={step.title} className="flex items-start gap-5">
                   <div className="w-10 h-10 rounded-full bg-[#FFF5F7] flex items-center justify-center text-[#DB2777] font-bold shrink-0 border border-pink-100">
-                    {step.n}
+                    {i + 1}
                   </div>
                   <p className="text-gray-700 leading-tight">
-                    <strong className="font-serif text-lg text-gray-900 block mb-1">{step.t}</strong>
-                    <span className="text-gray-600">{step.d}</span>
+                    <strong className="font-serif text-lg text-gray-900 block mb-1">{step.title}</strong>
+                    <span className="text-gray-600">{step.text}</span>
                   </p>
                 </li>
               ))}

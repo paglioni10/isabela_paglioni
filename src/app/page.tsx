@@ -11,6 +11,9 @@ import MoveService from '../components/MoveService'
 import Faq from '../components/Faq'
 import { client } from '../sanity/lib/client'
 
+// Busca o conteúdo do painel de novo a cada minuto (edições aparecem sem republicar)
+export const revalidate = 60
+
 async function getData() {
   try {
     const services = await client.fetch(`*[_type == "service"] | order(orderRank asc, title asc) { title, description, icon }`)

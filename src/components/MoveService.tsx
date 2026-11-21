@@ -1,27 +1,9 @@
 import { ClipboardList, PackageCheck, Truck, Home } from 'lucide-react'
+import { MOVE_STEPS } from '../constants/steps'
 
-const steps = [
-  {
-    icon: ClipboardList,
-    title: 'Planejamento e desapego',
-    text: 'Antes de embalar, separo com você o que vai, o que doa e o que descarta. É a melhor hora para desapegar e não levar peso à toa.',
-  },
-  {
-    icon: PackageCheck,
-    title: 'Embalagem com etiquetas',
-    text: 'Embalo tudo com cuidado e etiqueto cada caixa por cômodo e conteúdo. Na casa nova, você acha a cafeteira sem abrir dez caixas.',
-  },
-  {
-    icon: Truck,
-    title: 'Acompanhamento no dia',
-    text: 'No dia da mudança eu estou lá e oriento os carregadores a levar cada caixa direto para o cômodo certo.',
-  },
-  {
-    icon: Home,
-    title: 'Casa nova organizada',
-    text: 'Desembalo e organizo cada cômodo pensando na sua rotina, para a casa continuar em ordem depois.',
-  },
-]
+// Ícones na mesma ordem de MOVE_STEPS
+const icons = [ClipboardList, PackageCheck, Truck, Home]
+const steps = MOVE_STEPS.map((step, i) => ({ ...step, icon: icons[i] }))
 
 const whatsappUrl = `https://wa.me/5548984863549?text=${encodeURIComponent(
   'Olá Isa! Vi seu site e quero um orçamento para organização de mudança.'
@@ -70,7 +52,10 @@ export default function MoveService() {
             Pedir orçamento de mudança
           </a>
           <p className="text-gray-600">
-            Mande fotos ou vídeos dos ambientes pelo WhatsApp e eu passo o valor, sem precisar de visita.
+            Mande fotos ou vídeos dos ambientes pelo WhatsApp e eu passo o valor, sem precisar de visita.{' '}
+            <a href="/mudanca" className="text-[#BE185D] font-bold underline underline-offset-4 hover:text-gray-900">
+              Tudo sobre a organização de mudança
+            </a>
           </p>
         </div>
       </div>
