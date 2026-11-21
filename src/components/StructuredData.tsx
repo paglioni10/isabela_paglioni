@@ -21,7 +21,7 @@ export default function StructuredData({ services }: { services: { title?: strin
         image: `${url}/foto_isa.jpg`,
         telephone: contact.phone,
         email: contact.email,
-        sameAs: [contact.instagram],
+        sameAs: [contact.instagram, contact.googleBusiness],
         areaServed: [
           { '@type': 'City', name: 'Palhoça' },
           { '@type': 'City', name: 'Florianópolis' },

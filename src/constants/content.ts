@@ -6,6 +6,8 @@ export const SITE_CONTENT = {
     phoneDisplay: "(48) 98486-3549",
     email: "isa.paglioni@hotmail.com",
     instagram: "https://www.instagram.com/isa.paglioniorganizer",
+    // Perfil da Empresa no Google (ID do Knowledge Graph: /g/11zgzfxxmz)
+    googleBusiness: "https://www.google.com/search?kgmid=/g/11zgzfxxmz",
     region: "Palhoça e Grande Florianópolis",
   },
   brand: {
