@@ -19,6 +19,7 @@ A one-page site for Isabela Paglioni, a professional organizer (personal organiz
 
 ## Positioning
 
+- **Flagship service: moving (pre- and post-move organization).** Isabela also organizes the whole house; moving is the entry point, not the limit (confirmed 2026-11-21).
 - **Lasting organization:** the goal is systems that are easy to maintain in daily life, not just a beautiful result on delivery day.
 - **Proven results:** real project photos in the portfolio and video testimonials from real clients.
 - Service is personal: Isabela herself serves and executes; contact goes straight to her WhatsApp.
@@ -26,7 +27,8 @@ A one-page site for Isabela Paglioni, a professional organizer (personal organiz
 ## Operating Context
 
 - Main conversion channel: WhatsApp (`wa.me/5548984863549`, with a pre-filled message). Secondary: Instagram `@isa.paglioniorganizer`, e-mail `isa.paglioni@hotmail.com`.
-- Service area: Florianópolis and region, plus online consultancy.
+- Service area: Palhoça and Grande Florianópolis, plus online consultancy.
+- Instagram: @isa.paglioniorganizer (2.192 followers, 251 posts as of 2026-11-21). Clients authorize the use of images of their homes.
 - Visitors are mostly on mobile.
 - Analytics: Microsoft Clarity.
 

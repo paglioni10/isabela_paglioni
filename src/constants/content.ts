@@ -5,7 +5,7 @@ export const SITE_CONTENT = {
   },
   hero: {
     title: "Sua casa em harmonia, sua vida com mais tempo.",
-    subtitle: "Organização personalizada, pensada para a sua rotina e fácil de manter no dia a dia.",
+    subtitle: "Especialista em mudanças: embalo, desembalo e organizo a casa inteira, do jeito que você vive e fácil de manter no dia a dia.",
     ctaText: "Agendar pelo WhatsApp",
     ctaLink: "https://wa.me/5548984863549?text=Olá%20Isa,%20vi%20seu%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20a%20organização!", 
   },
