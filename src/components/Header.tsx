@@ -5,14 +5,14 @@ import { Menu, X } from 'lucide-react'
 import { SITE_CONTENT } from "../constants/content"
 
 const menuLinks = [
-  { href: "#home", label: "Início" },
-  { href: "#sobre", label: "Sobre" },
-  { href: "#servicos", label: "Serviços" },
-  { href: "#mudanca", label: "Mudança" },
-  { href: "#processo", label: "Processo" },
-  { href: "#portfolio", label: "Portfólio" },
-  { href: "#depoimentos", label: "Depoimentos" },
-  { href: "#dicas", label: "Dicas" },
+  { href: "/#home", label: "Início" },
+  { href: "/#sobre", label: "Sobre" },
+  { href: "/#servicos", label: "Serviços" },
+  { href: "/#mudanca", label: "Mudança" },
+  { href: "/#processo", label: "Processo" },
+  { href: "/#portfolio", label: "Portfólio" },
+  { href: "/#depoimentos", label: "Depoimentos" },
+  { href: "/#dicas", label: "Dicas" },
 ]
 
 export default function Header() {
@@ -30,7 +30,7 @@ export default function Header() {
     <header className="fixed top-0 left-0 right-0 bg-white/85 backdrop-blur-md z-50 border-b border-pink-50">
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         {/* LOGO */}
-        <a href="#home" className="flex flex-col" aria-label={`${SITE_CONTENT.brand.name}, voltar ao início`}>
+        <a href="/#home" className="flex flex-col" aria-label={`${SITE_CONTENT.brand.name}, voltar ao início`}>
           <span className="font-serif font-bold text-xl tracking-tight text-gray-900 leading-none">
             {SITE_CONTENT.brand.name}
           </span>
@@ -51,7 +51,7 @@ export default function Header() {
             </a>
           ))}
           <a
-            href="#contato"
+            href="/#contato"
             className="bg-[#DB2777] text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-[#BE185D] transition-colors"
           >
             Contato
@@ -93,7 +93,7 @@ export default function Header() {
             </a>
           ))}
           <a
-            href="#contato"
+            href="/#contato"
             onClick={() => setIsOpen(false)}
             className="mt-3 bg-[#DB2777] text-white px-6 py-3.5 rounded-xl text-center font-bold hover:bg-[#BE185D] transition-colors"
           >

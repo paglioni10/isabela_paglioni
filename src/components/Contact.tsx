@@ -89,6 +89,9 @@ export default function Contact() {
         <footer className="mt-16 text-center text-gray-500 text-[11px] tracking-[0.1em] uppercase">
           <p>© {new Date().getFullYear()} Isa Paglioni Personal Organizer. Todos os direitos reservados.</p>
           <p className="mt-3">
+            <a href="/privacidade" className="hover:text-gray-900 underline underline-offset-4">Política de privacidade</a>
+          </p>
+          <p className="mt-3">
             Desenvolvido por{" "}
             <a 
               href="https://www.linkedin.com/in/nicolas-pietro-paglioni-0287a2369" 
