@@ -24,8 +24,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: page.metaTitle,
     description: page.metaDescription,
     alternates: { canonical: `/${page.slug}` },
-    openGraph: { title: page.metaTitle, description: page.metaDescription, url: `/${page.slug}` },
-    twitter: { title: page.metaTitle, description: page.metaDescription },
+    // Definir openGraph aqui substitui o da raiz inteiro, então a imagem precisa vir junto
+    openGraph: {
+      type: 'website',
+      locale: 'pt_BR',
+      siteName: 'Isa Paglioni Personal Organizer',
+      title: page.metaTitle,
+      description: page.metaDescription,
+      url: `/${page.slug}`,
+      images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Isa Paglioni, personal organizer em Palhoça e Grande Florianópolis' }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: page.metaTitle,
+      description: page.metaDescription,
+      images: ['/opengraph-image'],
+    },
   }
 }
 
