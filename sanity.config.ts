@@ -13,6 +13,8 @@ import {apiVersion, dataset, projectId} from './src/sanity/env'
 import {schema} from './src/sanity/schemaTypes'
 import {structure} from './src/sanity/structure'
 import {StudioIcon, StudioLogo} from './src/sanity/components/StudioLogo'
+import {ApprovalTool} from './src/sanity/tools/ApprovalTool'
+import {CheckCircle2} from 'lucide-react'
 
 // Cores da identidade visual do site
 const pink = '#DB2777'
@@ -65,5 +67,10 @@ export default defineConfig({
     structureTool({structure, title: 'Conteúdo do site'}),
     // Vision (consultas GROQ) só aparece em desenvolvimento, para não confundir no painel
     ...(process.env.NODE_ENV === 'development' ? [visionTool({defaultApiVersion: apiVersion})] : []),
+  ],
+  // "Aprovar posts" vem primeiro: é a tela que abre no app do celular
+  tools: (prev) => [
+    {name: 'aprovar', title: 'Aprovar posts', icon: CheckCircle2, component: ApprovalTool},
+    ...prev,
   ],
 })
