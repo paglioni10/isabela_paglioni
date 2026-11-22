@@ -49,6 +49,8 @@ export default defineConfig({
   dataset,
   theme,
   studio: {components: {logo: StudioLogo}},
+  // Sem os avisos de novidades do Sanity (em inglês, cobriam os botões no celular)
+  announcements: {enabled: false},
   // Add and edit the content schema in the './sanity/schemaTypes' folder
   schema: {
     ...schema,

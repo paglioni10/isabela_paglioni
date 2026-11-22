@@ -346,11 +346,21 @@ function MediaStrip({ media }: { media: Media[] }) {
         ))}
       </div>
       {media.length > 1 && (
-        <Box style={{ position: 'absolute', top: 12, right: 12 }}>
-          <Badge mode="outline" fontSize={1} padding={2} style={{ background: 'rgba(0,0,0,0.6)', color: '#fff' }}>
-            {index + 1}/{media.length}
-          </Badge>
-        </Box>
+        <div
+          style={{
+            position: 'absolute',
+            top: 12,
+            right: 12,
+            background: 'rgba(0,0,0,0.65)',
+            color: '#fff',
+            fontSize: 13,
+            fontWeight: 600,
+            padding: '4px 10px',
+            borderRadius: 999,
+          }}
+        >
+          {index + 1}/{media.length}
+        </div>
       )}
     </Box>
   )

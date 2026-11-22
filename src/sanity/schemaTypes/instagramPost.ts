@@ -1,4 +1,4 @@
-import { defineArrayMember, defineField, defineType } from 'sanity'
+import { defineArrayMember, defineField, defineType, type PreviewValue } from 'sanity'
 import { Instagram } from 'lucide-react'
 
 // Etapas de um post, do rascunho até a publicação
@@ -19,6 +19,8 @@ export const POST_FORMATS = [
 ] as const
 
 const statusTitle = (value?: string) => POST_STATUS.find((s) => s.value === value)?.title ?? value
+// A prévia recebe a referência do primeiro arquivo; o prefixo diz se é foto ou vídeo
+const isImage = (asset?: { _ref?: string }) => (asset?._ref ?? '').startsWith('image-')
 const formatTitle = (value?: string) => POST_FORMATS.find((f) => f.value === value)?.title ?? value
 
 export default defineType({
@@ -109,7 +111,7 @@ export default defineType({
     { title: 'Data de publicação', name: 'scheduledAsc', by: [{ field: 'scheduledAt', direction: 'asc' }] },
   ],
   preview: {
-    select: { caption: 'caption', status: 'status', format: 'format', scheduledAt: 'scheduledAt', media: 'media.0' },
+    select: { caption: 'caption', status: 'status', format: 'format', scheduledAt: 'scheduledAt', media: 'media.0.asset' },
     prepare({ caption, status, format, scheduledAt, media }) {
       const when = scheduledAt
         ? new Date(scheduledAt).toLocaleString('pt-BR', {
@@ -124,7 +126,8 @@ export default defineType({
         title: caption ? caption.split('\n')[0].slice(0, 80) : 'Post sem legenda',
         subtitle: `${formatTitle(format)} · ${when} · ${statusTitle(status)}`,
         // Vídeo não tem miniatura no painel; mostra o ícone
-        media: media?._type === 'image' ? media : Instagram,
+        // O Sanity aceita um objeto de imagem aqui, embora o tipo não declare
+        media: isImage(media) ? ({ _type: 'image', asset: media } as unknown as PreviewValue['media']) : Instagram,
       }
     },
   },
