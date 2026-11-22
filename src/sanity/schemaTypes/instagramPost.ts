@@ -7,6 +7,7 @@ export const POST_STATUS = [
   { title: 'Para aprovar', value: 'aguardando' },
   { title: 'Ajuste pedido', value: 'ajuste' },
   { title: 'Aprovado (agendado)', value: 'aprovado' },
+  { title: 'Publicando (o Instagram está processando)', value: 'publicando' },
   { title: 'Publicado', value: 'publicado' },
   { title: 'Erro ao publicar', value: 'erro' },
 ] as const
@@ -105,7 +106,19 @@ export default defineType({
     defineField({ name: 'approvedAt', title: 'Aprovado em', type: 'datetime', group: 'publicacao', readOnly: true }),
     defineField({ name: 'publishedAt', title: 'Publicado em', type: 'datetime', group: 'publicacao', readOnly: true }),
     defineField({ name: 'permalink', title: 'Link no Instagram', type: 'url', group: 'publicacao', readOnly: true }),
-    defineField({ name: 'error', title: 'Erro', type: 'text', rows: 3, group: 'publicacao', readOnly: true }),
+    defineField({
+      name: 'error',
+      title: 'Erro',
+      description: 'Para tentar de novo, corrija o problema e mude a situação para "Aprovado".',
+      type: 'text',
+      rows: 3,
+      group: 'publicacao',
+      readOnly: true,
+    }),
+    // Controle interno do publicador automático
+    defineField({ name: 'sentAt', title: 'Enviado ao Instagram em', type: 'datetime', group: 'publicacao', readOnly: true }),
+    defineField({ name: 'containerId', title: 'ID do envio', type: 'string', group: 'publicacao', readOnly: true, hidden: true }),
+    defineField({ name: 'mediaId', title: 'ID do post no Instagram', type: 'string', group: 'publicacao', readOnly: true, hidden: true }),
   ],
   orderings: [
     { title: 'Data de publicação', name: 'scheduledAsc', by: [{ field: 'scheduledAt', direction: 'asc' }] },
