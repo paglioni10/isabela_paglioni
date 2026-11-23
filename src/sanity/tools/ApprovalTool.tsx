@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { useClient } from 'sanity'
+import { useClient, useCurrentUser } from 'sanity'
 import { Badge, Box, Button, Card, Container, Flex, Heading, Spinner, Stack, Text, TextArea, useToast } from '@sanity/ui'
 import { POST_FORMATS } from '../schemaTypes/instagramPost'
 
@@ -70,6 +70,8 @@ export function ApprovalTool() {
               Confira cada post. Aprovou, ele sai sozinho no dia e hora marcados.
             </Text>
           </Stack>
+
+          <NotificationToggle />
 
           {pending === null ? (
             <Flex justify="center" padding={5}>
@@ -250,7 +252,8 @@ function PostCard({ post, onDone }: { post: Post; onDone: () => void }) {
                     disabled={!feedback.trim() || busy}
                     onClick={() =>
                       run(
-                        () => save({ status: 'ajuste', feedback: feedback.trim(), ...(changed ? { caption } : {}) }),
+                        // Limpa o controle de aviso: quando a equipe reenviar, a Isa é avisada de novo
+                        () => save({ status: 'ajuste', feedback: feedback.trim(), ...(changed ? { caption } : {}) }, ['notifiedAt', 'remindedAt']),
                         'Pedido enviado para a equipe'
                       )
                     }
@@ -280,7 +283,7 @@ function PostCard({ post, onDone }: { post: Post; onDone: () => void }) {
                     disabled={busy || editing}
                     onClick={() =>
                       run(
-                        () => save({ status: 'aprovado', approvedAt: new Date().toISOString() }, ['feedback']),
+                        () => save({ status: 'aprovado', approvedAt: new Date().toISOString() }, ['feedback', 'notifiedAt', 'remindedAt']),
                         'Aprovado! Vai sair no horário marcado.'
                       )
                     }
@@ -363,5 +366,144 @@ function MediaStrip({ media }: { media: Media[] }) {
         </div>
       )}
     </Box>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Notificações no celular (Web Push)
+
+const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
+const SW_URL = '/painel-sw.js'
+
+type PushState = 'checking' | 'unsupported' | 'ios-browser' | 'denied' | 'off' | 'on'
+
+function base64ToBytes(base64: string) {
+  const b64 = (base64 + '='.repeat((4 - (base64.length % 4)) % 4)).replace(/-/g, '+').replace(/_/g, '/')
+  const raw = atob(b64)
+  const bytes = new Uint8Array(new ArrayBuffer(raw.length))
+  for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i)
+  return bytes
+}
+
+// O mesmo aparelho sempre gera o mesmo ID, então reativar não duplica
+async function subscriptionId(endpoint: string) {
+  const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(endpoint))
+  const hex = Array.from(new Uint8Array(hash), (b) => b.toString(16).padStart(2, '0')).join('')
+  return `pushSubscription.${hex.slice(0, 32)}`
+}
+
+function NotificationToggle() {
+  const client = useClient({ apiVersion: '2024-01-01' })
+  const user = useCurrentUser()
+  const toast = useToast()
+  const [state, setState] = useState<PushState>('checking')
+  const [busy, setBusy] = useState(false)
+
+  useEffect(() => {
+    if (!VAPID_PUBLIC_KEY) return
+    const supported = 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window
+    if (!supported) {
+      // No iPhone, notificação só existe no app aberto pelo ícone da tela inicial
+      setState(/iPhone|iPad|iPod/.test(navigator.userAgent) ? 'ios-browser' : 'unsupported')
+      return
+    }
+    if (Notification.permission === 'denied') {
+      setState('denied')
+      return
+    }
+    navigator.serviceWorker
+      .register(SW_URL, { scope: '/admin/' })
+      .then((reg) => reg.pushManager.getSubscription())
+      .then((sub) => setState(sub && Notification.permission === 'granted' ? 'on' : 'off'))
+      .catch(() => setState('unsupported'))
+  }, [])
+
+  const enable = async () => {
+    setBusy(true)
+    try {
+      // Pedir a permissão primeiro: o iPhone só aceita se vier direto do toque no botão
+      const permission = await Notification.requestPermission()
+      if (permission !== 'granted') {
+        setState(permission === 'denied' ? 'denied' : 'off')
+        return
+      }
+      const reg = await navigator.serviceWorker.register(SW_URL, { scope: '/admin/' })
+      await navigator.serviceWorker.ready
+      const sub =
+        (await reg.pushManager.getSubscription()) ??
+        (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: base64ToBytes(VAPID_PUBLIC_KEY!) }))
+      const json = sub.toJSON()
+      await client.createOrReplace({
+        _id: await subscriptionId(sub.endpoint),
+        _type: 'pushSubscription',
+        endpoint: sub.endpoint,
+        keys: { p256dh: json.keys?.p256dh, auth: json.keys?.auth },
+        userId: user?.id,
+        userName: user?.name,
+        isAdmin: Boolean(user?.roles?.some((r) => r.name === 'administrator')),
+        device: navigator.userAgent.slice(0, 200),
+        createdAt: new Date().toISOString(),
+      })
+      await reg.showNotification('Notificações ativadas', {
+        body: 'Você vai receber um aviso quando tiver post para aprovar.',
+        icon: '/painel/icon-192.png',
+      })
+      setState('on')
+    } catch (err) {
+      toast.push({ status: 'error', title: 'Não deu para ativar', description: String((err as Error).message ?? err) })
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const disable = async () => {
+    setBusy(true)
+    try {
+      const reg = await navigator.serviceWorker.getRegistration('/admin/')
+      const sub = await reg?.pushManager.getSubscription()
+      if (sub) {
+        await client.delete(await subscriptionId(sub.endpoint))
+        await sub.unsubscribe()
+      }
+      setState('off')
+    } catch (err) {
+      toast.push({ status: 'error', title: 'Não deu para desativar', description: String((err as Error).message ?? err) })
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  if (!VAPID_PUBLIC_KEY || state === 'checking' || state === 'unsupported') return null
+
+  if (state === 'on') {
+    return (
+      <Flex align="center" justify="space-between" gap={3}>
+        <Text size={1} muted>
+          🔔 Notificações ativadas neste aparelho
+        </Text>
+        <Button mode="bleed" fontSize={1} padding={2} text="Desativar" disabled={busy} onClick={disable} />
+      </Flex>
+    )
+  }
+
+  return (
+    <Card padding={4} radius={3} tone="primary" border>
+      <Stack space={3}>
+        <Text size={2} weight="semibold">
+          Receba um aviso quando tiver post para aprovar
+        </Text>
+        {state === 'ios-browser' ? (
+          <Text size={1} muted>
+            No iPhone, as notificações só funcionam pelo app: abra o Painel da Isa pelo ícone da tela de início.
+          </Text>
+        ) : state === 'denied' ? (
+          <Text size={1} muted>
+            As notificações estão bloqueadas. Libere nos ajustes do celular, em Notificações, para o Painel da Isa, e abra o app de novo.
+          </Text>
+        ) : (
+          <Button tone="primary" padding={4} fontSize={2} text="Ativar notificações" disabled={busy} onClick={enable} />
+        )}
+      </Stack>
+    </Card>
   )
 }

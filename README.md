@@ -37,6 +37,7 @@ O projeto tem três partes que compartilham o mesmo código e o mesmo deploy:
 - **Instagram:** fila de posts separada por etapa: para aprovar, ajustes pedidos, agendados, publicados, erros e rascunhos da equipe.
 - **Tela "Aprovar posts",** pensada para celular. A Isa vê as fotos e os vídeos como no Instagram, edita a legenda e aprova ou pede ajuste. A tela se atualiza sozinha.
 - **App no celular:** o painel pode ser instalado na tela inicial (PWA) e abre direto na aprovação.
+- **Notificações (Web Push):** quem ativa no app recebe um aviso quando chega post para aprovar e um lembrete se ele ficar parado por 24 horas. Administradores também recebem "publicado" e "erro ao publicar". No iPhone, funciona com o app aberto pelo ícone da tela inicial (iOS 16.4 ou mais recente).
 
 ### Publicação automática no Instagram
 - O endpoint `GET /api/instagram/publicar` é chamado a cada 15 minutos por um agendador externo e é protegido por `CRON_SECRET`.
@@ -99,12 +100,14 @@ src/
 ├── components/                   Seções do site, aviso de cookies, dados estruturados
 ├── constants/                    Textos fixos, dados do negócio e páginas de serviço
 ├── lib/instagram.ts              Cliente da Graph API (contêineres, status, publicação)
+├── lib/push.ts                   Envio das notificações (Web Push)
 └── sanity/
     ├── schemaTypes/              portfolio, service, testimonial, dicas, instagramPost
     ├── structure.ts              Navegação do painel
     ├── tools/ApprovalTool.tsx    Tela "Aprovar posts"
     └── lib/                      Cliente, consultas GROQ e helpers de imagem
 public/painel/                    Manifesto e ícones do PWA
+public/painel-sw.js               Service worker que recebe as notificações
 sanity.config.ts                  Configuração do Studio (tema, ferramentas, templates)
 PRODUCT.md                        Contexto do negócio, público e posicionamento
 ```
@@ -133,6 +136,10 @@ SANITY_API_WRITE_TOKEN=     # token do Sanity com permissão Editor
 INSTAGRAM_USER_ID=          # ID da conta profissional no Instagram
 INSTAGRAM_ACCESS_TOKEN=     # token de usuário do sistema (Meta Business)
 CRON_SECRET=                # senha longa e aleatória que o agendador envia
+
+# Notificações no celular (gerar com: npx web-push generate-vapid-keys)
+NEXT_PUBLIC_VAPID_PUBLIC_KEY=
+VAPID_PRIVATE_KEY=
 ```
 
 ```bash

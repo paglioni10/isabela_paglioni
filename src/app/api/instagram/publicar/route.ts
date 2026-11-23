@@ -6,6 +6,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from 'next-sanity'
 import { containerStatus, createContainer, instagramImageUrl, publishContainer, type PostFormat, type PostMedia } from '../../../../lib/instagram'
+import { notify } from '../../../../lib/push'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -22,6 +23,7 @@ const sanity = createClient({
 type Doc = {
   _id: string
   format: PostFormat
+  scheduledAt?: string
   caption?: string
   containerId?: string
   sentAt?: string
@@ -31,6 +33,24 @@ type Doc = {
 
 // Vídeo que não termina de processar em 1 hora vira erro
 const PROCESSING_LIMIT_MS = 60 * 60 * 1000
+// Post parado em "Para aprovar" ganha um lembrete por dia
+const REMINDER_MS = 24 * 60 * 60 * 1000
+
+const FORMAT_NAMES: Record<string, string> = { reel: 'Reel', carrossel: 'Carrossel', foto: 'Foto', story: 'Story' }
+const describe = (doc: Pick<Doc, 'format' | 'scheduledAt' | 'caption'>) => {
+  const when = doc.scheduledAt
+    ? new Date(doc.scheduledAt).toLocaleString('pt-BR', {
+        timeZone: 'America/Sao_Paulo',
+        weekday: 'short',
+        day: '2-digit',
+        month: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+      })
+    : 'sem data'
+  const line = doc.caption?.split('\n')[0]?.slice(0, 80)
+  return `${FORMAT_NAMES[doc.format] ?? 'Post'} · ${when}${line ? `\n${line}` : ''}`
+}
 
 export async function GET(request: Request) {
   const secret = process.env.CRON_SECRET
@@ -43,6 +63,7 @@ export async function GET(request: Request) {
     const message = err instanceof Error ? err.message : String(err)
     await sanity.patch(id).set({ status: 'erro', error: message }).commit()
     report.push({ id, result: `erro: ${message}` })
+    await notify(sanity, { title: 'Erro ao publicar', body: message.slice(0, 140), tag: `erro-${id}` }, 'admins')
   }
   const done = async (id: string, containerId: string) => {
     const { mediaId, permalink } = await publishContainer(containerId)
@@ -52,6 +73,38 @@ export async function GET(request: Request) {
       .unset(['error'])
       .commit()
     report.push({ id, result: `publicado ${permalink ?? mediaId}` })
+    await notify(sanity, { title: 'Post publicado ✓', body: 'Já está no Instagram.', url: permalink, tag: `ok-${id}` }, 'admins')
+  }
+
+  // 0. Avisa no celular sobre posts novos para aprovar e lembra dos parados há 1 dia
+  const waiting = await sanity.fetch<(Doc & { notifiedAt?: string; remindedAt?: string })[]>(
+    `*[_type == "instagramPost" && status == "aguardando"] | order(scheduledAt asc){ _id, format, scheduledAt, caption, notifiedAt, remindedAt }`
+  )
+  const fresh = waiting.filter((d) => !d.notifiedAt)
+  const stale = waiting.filter((d) => {
+    const last = d.remindedAt ?? d.notifiedAt
+    return d.notifiedAt && last && Date.now() - Date.parse(last) > REMINDER_MS
+  })
+  if (fresh.length > 0) {
+    const sent = await notify(
+      sanity,
+      fresh.length === 1
+        ? { title: 'Novo post para aprovar', body: describe(fresh[0]), tag: 'aprovar' }
+        : { title: `${fresh.length} posts novos para aprovar`, body: fresh.map((d) => describe(d).split('\n')[0]).join('\n'), tag: 'aprovar' }
+    )
+    const now = new Date().toISOString()
+    for (const d of fresh) await sanity.patch(d._id).set({ notifiedAt: now }).commit()
+    report.push({ id: 'notificacoes', result: `${fresh.length} post(s) novo(s), ${sent} aparelho(s) avisado(s)` })
+  }
+  if (stale.length > 0) {
+    const sent = await notify(sanity, {
+      title: 'Lembrete do Painel',
+      body: stale.length === 1 ? `1 post esperando sua aprovação\n${describe(stale[0])}` : `${stale.length} posts esperando sua aprovação`,
+      tag: 'aprovar',
+    })
+    const now = new Date().toISOString()
+    for (const d of stale) await sanity.patch(d._id).set({ remindedAt: now }).commit()
+    report.push({ id: 'lembrete', result: `${stale.length} post(s) parado(s), ${sent} aparelho(s) avisado(s)` })
   }
 
   // 1. Posts em processamento

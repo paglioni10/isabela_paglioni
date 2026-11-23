@@ -119,6 +119,9 @@ export default defineType({
     defineField({ name: 'sentAt', title: 'Enviado ao Instagram em', type: 'datetime', group: 'publicacao', readOnly: true }),
     defineField({ name: 'containerId', title: 'ID do envio', type: 'string', group: 'publicacao', readOnly: true, hidden: true }),
     defineField({ name: 'mediaId', title: 'ID do post no Instagram', type: 'string', group: 'publicacao', readOnly: true, hidden: true }),
+    // Controle das notificações no celular
+    defineField({ name: 'notifiedAt', title: 'Isa avisada em', type: 'datetime', group: 'publicacao', readOnly: true, hidden: true }),
+    defineField({ name: 'remindedAt', title: 'Lembrete enviado em', type: 'datetime', group: 'publicacao', readOnly: true, hidden: true }),
   ],
   orderings: [
     { title: 'Data de publicação', name: 'scheduledAsc', by: [{ field: 'scheduledAt', direction: 'asc' }] },
