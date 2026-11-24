@@ -149,6 +149,25 @@ export default async function ServicePageRoute({ params }: Props) {
         </div>
       </section>
 
+      {/* Detalhes práticos: tempo, quando chamar, dicas */}
+      {page.details && (
+        <section className="py-20">
+          <div className="max-w-4xl mx-auto px-6">
+            <h2 className="text-3xl md:text-5xl font-serif font-bold text-gray-900 mb-12 leading-[1.1]">
+              {page.details.heading[0]} <span className="text-[#DB2777] italic">{page.details.heading[1]}</span>
+            </h2>
+            <dl className="divide-y divide-pink-100 border-y border-pink-100">
+              {page.details.items.map((item) => (
+                <div key={item.title} className="py-8 md:grid md:grid-cols-[14rem_1fr] md:gap-10">
+                  <dt className="font-serif text-2xl font-bold text-gray-900 mb-3 md:mb-0">{item.title}</dt>
+                  <dd className="text-gray-600 text-lg leading-relaxed max-w-[62ch]">{item.text}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
+      )}
+
       {/* Fotos reais do portfólio */}
       {photos.length > 0 && (
         <section className="py-20">

@@ -31,13 +31,13 @@ export default function About() {
             
             <div className="space-y-6 text-gray-600 text-lg leading-relaxed max-w-[62ch]">
               <p>
-                Olá! Eu sou a <strong className="text-gray-900 font-bold">Isabela Paglioni</strong>. Minha missão é ajudar pessoas a recuperarem o prazer de estar em casa através da organização inteligente e personalizada.
+                Olá! Eu sou a <strong className="text-gray-900 font-bold">Isabela Paglioni</strong>. Sempre gostei de cuidar da minha casa: decorar, melhorar cada canto e ver cada coisa no seu lugar. Em 2022, transformei esse gosto em profissão, para levar o meu jeito e o meu estilo para a casa de outras famílias.
               </p>
               <p>
-                Acredito que um ambiente organizado não é apenas uma questão estética, mas o primeiro passo para uma mente mais leve e uma rotina mais produtiva. Cada closet, cozinha ou quarto de bebê que organizo é tratado como um projeto único de bem-estar.
+                Desde então, fiz a formação em organização profissional e cursos de pré e pós-mudança, organização inclusiva, organização para recém-casados e organização baby, além de vários workshops.
               </p>
               <p>
-                Com técnicas profissionais de organização, ajudo você a otimizar seu espaço e manter cada coisa em seu lugar de forma prática e definitiva.
+                A minha regra de ouro é simples: <strong className="text-gray-900 font-bold">cada coisa precisa ter um local definido</strong>. Assim, mesmo quando algo sai do lugar, você sabe para onde ele volta, e manter a casa organizada vira hábito.
               </p>
             </div>
 
