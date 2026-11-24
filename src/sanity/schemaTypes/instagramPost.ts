@@ -122,6 +122,7 @@ export default defineType({
     // Controle das notificações no celular
     defineField({ name: 'notifiedAt', title: 'Isa avisada em', type: 'datetime', group: 'publicacao', readOnly: true, hidden: true }),
     defineField({ name: 'remindedAt', title: 'Lembrete enviado em', type: 'datetime', group: 'publicacao', readOnly: true, hidden: true }),
+    defineField({ name: 'ajusteNotifiedAt', title: 'Equipe avisada do ajuste em', type: 'datetime', group: 'publicacao', readOnly: true, hidden: true }),
   ],
   orderings: [
     { title: 'Data de publicação', name: 'scheduledAsc', by: [{ field: 'scheduledAt', direction: 'asc' }] },

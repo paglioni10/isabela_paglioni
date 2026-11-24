@@ -115,6 +115,30 @@ export async function GET(request: Request) {
         tag: 'aprovar',
       })
     }
+
+    // Pedidos de ajuste da Isa: avisa os administradores, uma vez por pedido
+    const ajustes = await sanity.fetch<(Doc & { feedback?: string })[]>(
+      `*[_type == "instagramPost" && status == "ajuste" && !defined(ajusteNotifiedAt)]{ _id, format, scheduledAt, caption, feedback }`
+    )
+    for (const d of ajustes) {
+      const quando = describe(d).split('\n')[0]
+      const { sent, error } = await notify(
+        sanity,
+        {
+          title: 'Ajuste pedido',
+          body: `${quando}\n"${(d.feedback ?? 'sem mensagem').slice(0, 140)}"`,
+          url: `/admin/intent/edit/id=${d._id};type=instagramPost/`,
+          tag: `ajuste-${d._id}`,
+        },
+        'admins'
+      )
+      if (error) {
+        report.push({ id: d._id, result: `aviso de ajuste não enviado: ${error}` })
+        continue
+      }
+      await sanity.patch(d._id).set({ ajusteNotifiedAt: new Date().toISOString() }).commit()
+      report.push({ id: d._id, result: `ajuste pedido, ${sent} aparelho(s) avisado(s)` })
+    }
   } catch (err) {
     report.push({ id: 'notificacoes', result: `erro: ${err instanceof Error ? err.message : String(err)}` })
   }

@@ -253,7 +253,7 @@ function PostCard({ post, onDone }: { post: Post; onDone: () => void }) {
                     onClick={() =>
                       run(
                         // Limpa o controle de aviso: quando a equipe reenviar, a Isa é avisada de novo
-                        () => save({ status: 'ajuste', feedback: feedback.trim(), ...(changed ? { caption } : {}) }, ['notifiedAt', 'remindedAt']),
+                        () => save({ status: 'ajuste', feedback: feedback.trim(), ...(changed ? { caption } : {}) }, ['notifiedAt', 'remindedAt', 'ajusteNotifiedAt']),
                         'Pedido enviado para a equipe'
                       )
                     }
