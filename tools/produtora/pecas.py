@@ -107,7 +107,8 @@ def _palavras(frase: str) -> list[Palavra]:
     """'Cada coisa no *seu lugar.*' -> palavras com a marca de destaque."""
     saida: list[Palavra] = []
     for i, trecho in enumerate(re.split(r"\*", frase)):
-        for p in trecho.split():
+        # Mantém "\n" como palavra própria: é a quebra de linha manual
+        for p in re.findall(r"\n|[^\s]+", trecho):
             saida.append(Palavra(p, destaque=i % 2 == 1))
     return saida
 
@@ -116,7 +117,7 @@ def _quebrar(frase: str, f: ImageFont.FreeTypeFont, largura: int) -> list[list[P
     linhas: list[list[Palavra]] = [[]]
     espaco = f.getlength(" ")
     usado = 0.0
-    for p in _palavras(frase.replace("\n", " \n ")):
+    for p in _palavras(frase):
         if p.texto == "\n":
             linhas.append([])
             usado = 0
