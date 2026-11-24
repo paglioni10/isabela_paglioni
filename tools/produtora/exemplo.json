@@ -1,0 +1,44 @@
+[
+  {
+    "modelo": "story_frase",
+    "foto": "fotos/closet-completo.jpg",
+    "frase": "Cada coisa no *seu lugar.*",
+    "saida": "saida/story-frase.jpg"
+  },
+  {
+    "modelo": "story_antes_depois",
+    "antes": "fotos/closet-antes.jpg",
+    "depois": "fotos/closet-completo.jpg",
+    "saida": "saida/story-antes-depois.jpg"
+  },
+  {
+    "modelo": "story_dica",
+    "titulo": "Antes de guardar, *tire tudo.*",
+    "texto": "Separe por categoria primeiro. Só depois decida o que vai dobrado e o que vai pendurado.",
+    "foto": "fotos/closet-gaveta-meias.jpg",
+    "saida": "saida/story-dica.jpg"
+  },
+  {
+    "modelo": "capa_reel",
+    "foto": "fotos/closet-completo.jpg",
+    "titulo": "Closet *do casal*",
+    "apoio": "organização por categoria",
+    "saida": "saida/capa-reel.jpg"
+  },
+  {
+    "modelo": "carrossel",
+    "capa": {"foto": "fotos/closet-gaveta-camisetas.jpg", "titulo": "Como organizo *um closet*", "subtitulo": "em 3 passos"},
+    "passos": [
+      {"titulo": "Tudo para fora", "texto": "Tiro tudo do lugar e separo por categoria.", "foto": "fotos/closet-gaveta-acessorios.jpg"},
+      {"titulo": "Estudo do espaço", "texto": "Decido o que vai dobrado, o que vai pendurado e onde cada categoria fica mais à mão.", "foto": "fotos/closet-cabides.jpg"},
+      {"titulo": "Cada coisa no *seu lugar*", "texto": "Defino um local para cada coisa, para você conseguir manter.", "foto": "fotos/closet-prateleiras.jpg"}
+    ],
+    "final": {"pergunta": "Quer a sua casa assim?"},
+    "pasta": "saida/carrossel-closet"
+  },
+  {
+    "modelo": "capa_destaque",
+    "letra": "M",
+    "saida": "saida/destaque-mudanca.jpg"
+  }
+]
