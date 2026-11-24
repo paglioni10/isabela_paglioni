@@ -5,7 +5,16 @@
 
 import { NextResponse } from 'next/server'
 import { createClient } from 'next-sanity'
-import { containerStatus, createContainer, instagramImageUrl, publishContainer, type PostFormat, type PostMedia } from '../../../../lib/instagram'
+import {
+  containerStatus,
+  createCarouselItems,
+  createContainer,
+  finishCarousel,
+  instagramImageUrl,
+  publishContainer,
+  type PostFormat,
+  type PostMedia,
+} from '../../../../lib/instagram'
 import { notify, type PushPayload } from '../../../../lib/push'
 
 export const dynamic = 'force-dynamic'
@@ -26,6 +35,7 @@ type Doc = {
   scheduledAt?: string
   caption?: string
   containerId?: string
+  carouselItems?: string[]
   sentAt?: string
   media?: { _type: 'image' | 'file'; url?: string }[]
   coverUrl?: string
@@ -143,18 +153,36 @@ export async function GET(request: Request) {
     report.push({ id: 'notificacoes', result: `erro: ${err instanceof Error ? err.message : String(err)}` })
   }
 
-  // 1. Posts em processamento
+  // 1. Posts em processamento (vídeos e carrosséis, que a Meta processa aos poucos)
   const processing = await sanity.fetch<Doc[]>(
-    `*[_type == "instagramPost" && status == "publicando" && defined(containerId)]{ _id, format, containerId, sentAt }`
+    `*[_type == "instagramPost" && status == "publicando"]{ _id, format, caption, containerId, carouselItems, sentAt }`
   )
+  // Confere uma vez e volta na próxima chamada: nunca fica esperando
+  const checkContainer = async (id: string, containerId: string) => {
+    const { status_code, status } = await containerStatus(containerId)
+    if (status_code === 'FINISHED') return done(id, containerId)
+    if (status_code === 'ERROR' || status_code === 'EXPIRED') return fail(id, new Error(`Mídia recusada pelo Instagram: ${status ?? status_code}`))
+    report.push({ id, result: 'processando o vídeo' })
+  }
   for (const doc of processing) {
+    const expired = doc.sentAt && Date.now() - Date.parse(doc.sentAt) > PROCESSING_LIMIT_MS
     try {
-      const { status_code, status } = await containerStatus(doc.containerId!)
-      if (status_code === 'FINISHED') await done(doc._id, doc.containerId!)
-      else if (status_code === 'ERROR' || status_code === 'EXPIRED') await fail(doc._id, new Error(`Mídia recusada pelo Instagram: ${status ?? status_code}`))
-      else if (doc.sentAt && Date.now() - Date.parse(doc.sentAt) > PROCESSING_LIMIT_MS)
-        await fail(doc._id, new Error('O Instagram não terminou de processar o vídeo em 1 hora'))
-      else report.push({ id: doc._id, result: 'ainda processando' })
+      if (doc.containerId) {
+        if (expired) await fail(doc._id, new Error('O Instagram não terminou de processar o vídeo em 1 hora'))
+        else await checkContainer(doc._id, doc.containerId)
+      } else if (doc.carouselItems?.length) {
+        const result = await finishCarousel(doc.carouselItems, doc.caption ?? '')
+        if (result === 'processando') {
+          if (expired) await fail(doc._id, new Error('O Instagram não terminou de processar os vídeos do carrossel em 1 hora'))
+          else report.push({ id: doc._id, result: 'processando os vídeos do carrossel' })
+        } else {
+          await sanity.patch(doc._id).set({ containerId: result.containerId }).commit()
+          await checkContainer(doc._id, result.containerId)
+        }
+      } else if (expired) {
+        // O envio caiu no meio (nem item nem contêiner gravados)
+        await fail(doc._id, new Error('O envio ao Instagram não foi concluído. Mude para "Aprovado" para tentar de novo.'))
+      }
     } catch (err) {
       await fail(doc._id, err)
     }
@@ -178,7 +206,7 @@ export async function GET(request: Request) {
         .patch(doc._id)
         .ifRevisionId(current._rev)
         .set({ status: 'publicando', sentAt: new Date().toISOString() })
-        .unset(['error', 'containerId'])
+        .unset(['error', 'containerId', 'carouselItems'])
         .commit()
     } catch {
       report.push({ id: doc._id, result: 'já estava sendo enviado por outra chamada' })
@@ -188,6 +216,24 @@ export async function GET(request: Request) {
       const media: PostMedia[] = (doc.media ?? [])
         .filter((m) => m.url)
         .map((m) => (m._type === 'image' ? { type: 'image', url: instagramImageUrl(m.url!) } : { type: 'video', url: m.url! }))
+      if (doc.format === 'carrossel' && media.length > 1) {
+        // Etapa 1 agora; o contêiner do carrossel é criado quando todos os itens estiverem prontos
+        const carouselItems = await createCarouselItems(media)
+        await sanity.patch(doc._id).set({ carouselItems }).commit()
+        // Fotos ficam prontas em segundos: até 3 conferências curtas (cerca de 9 s no total).
+        // Vídeos que demoram mais ficam para as próximas chamadas do cron.
+        let result = await finishCarousel(carouselItems, doc.caption ?? '')
+        for (let i = 0; i < 3 && result === 'processando'; i++) {
+          await new Promise((ok) => setTimeout(ok, 3000))
+          result = await finishCarousel(carouselItems, doc.caption ?? '')
+        }
+        if (result === 'processando') report.push({ id: doc._id, result: 'enviado, processando os vídeos do carrossel' })
+        else {
+          await sanity.patch(doc._id).set({ containerId: result.containerId }).commit()
+          await checkContainer(doc._id, result.containerId)
+        }
+        continue
+      }
       const containerId = await createContainer(
         doc.format,
         media,
@@ -195,9 +241,7 @@ export async function GET(request: Request) {
         doc.coverUrl ? instagramImageUrl(doc.coverUrl) : undefined
       )
       await sanity.patch(doc._id).set({ containerId }).commit()
-      const { status_code } = await containerStatus(containerId)
-      if (status_code === 'FINISHED') await done(doc._id, containerId)
-      else report.push({ id: doc._id, result: 'enviado, processando o vídeo' })
+      await checkContainer(doc._id, containerId)
     } catch (err) {
       await fail(doc._id, err)
     }

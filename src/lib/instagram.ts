@@ -67,24 +67,8 @@ export async function createContainer(format: PostFormat, media: PostMedia[], ca
   }
 
   if (format === 'carrossel' && media.length > 1) {
-    if (media.length > 10) throw new Error('Carrossel aceita no máximo 10 itens')
-    const children: string[] = []
-    for (const m of media) {
-      const { id } = await graph<{ id: string }>(
-        `${userId}/media`,
-        { is_carousel_item: 'true', ...(m.type === 'video' ? { media_type: 'VIDEO' } : {}), ...mediaParams(m) },
-        'POST'
-      )
-      children.push(id)
-    }
-    // Vídeos dentro do carrossel precisam terminar de processar antes do contêiner principal
-    for (const child of children) await waitFinished(child, 50_000)
-    const { id } = await graph<{ id: string }>(
-      `${userId}/media`,
-      { media_type: 'CAROUSEL', children: children.join(','), caption },
-      'POST'
-    )
-    return id
+    // Carrossel é feito em etapas e devolve os itens (ver createCarouselItems)
+    throw new Error('Use createCarouselItems para carrossel')
   }
 
   // Foto única (ou carrossel com um item só)
@@ -109,15 +93,43 @@ export async function containerStatus(containerId: string) {
   return r
 }
 
-async function waitFinished(containerId: string, timeoutMs: number) {
-  const start = Date.now()
-  while (Date.now() - start < timeoutMs) {
-    const { status_code, status } = await containerStatus(containerId)
-    if (status_code === 'FINISHED') return
-    if (status_code === 'ERROR' || status_code === 'EXPIRED') throw new Error(`Mídia recusada pelo Instagram: ${status ?? status_code}`)
-    await new Promise((r) => setTimeout(r, 3000))
+/**
+ * Carrossel, etapa 1: envia cada foto ou vídeo como item. Não espera nada:
+ * vídeos são processados pela Meta em segundo plano.
+ */
+export async function createCarouselItems(media: PostMedia[]) {
+  const { userId } = credentials()
+  if (media.length < 2) throw new Error('Carrossel precisa de pelo menos 2 itens')
+  if (media.length > 10) throw new Error('Carrossel aceita no máximo 10 itens')
+  const items: string[] = []
+  for (const m of media) {
+    const { id } = await graph<{ id: string }>(
+      `${userId}/media`,
+      { is_carousel_item: 'true', ...(m.type === 'video' ? { media_type: 'VIDEO' } : {}), ...mediaParams(m) },
+      'POST'
+    )
+    items.push(id)
   }
-  throw new Error('O Instagram demorou demais para processar um vídeo do carrossel')
+  return items
+}
+
+/**
+ * Carrossel, etapa 2: confere os itens uma vez, sem esperar.
+ * Todos prontos: cria o contêiner do carrossel e devolve o id.
+ * Algum ainda processando: devolve 'processando' para tentar na próxima chamada.
+ */
+export async function finishCarousel(items: string[], caption: string): Promise<{ containerId: string } | 'processando'> {
+  const { userId } = credentials()
+  const statuses = await Promise.all(items.map((id) => containerStatus(id)))
+  const bad = statuses.find((s) => s.status_code === 'ERROR' || s.status_code === 'EXPIRED')
+  if (bad) throw new Error(`Um item do carrossel foi recusado pelo Instagram: ${bad.status ?? bad.status_code}`)
+  if (statuses.some((s) => s.status_code !== 'FINISHED')) return 'processando'
+  const { id } = await graph<{ id: string }>(
+    `${userId}/media`,
+    { media_type: 'CAROUSEL', children: items.join(','), caption },
+    'POST'
+  )
+  return { containerId: id }
 }
 
 /** Publica um contêiner pronto e devolve o id e o link do post */

@@ -118,6 +118,15 @@ export default defineType({
     // Controle interno do publicador automático
     defineField({ name: 'sentAt', title: 'Enviado ao Instagram em', type: 'datetime', group: 'publicacao', readOnly: true }),
     defineField({ name: 'containerId', title: 'ID do envio', type: 'string', group: 'publicacao', readOnly: true, hidden: true }),
+    defineField({
+      name: 'carouselItems',
+      title: 'Itens do carrossel enviados',
+      type: 'array',
+      of: [{ type: 'string' }],
+      group: 'publicacao',
+      readOnly: true,
+      hidden: true,
+    }),
     defineField({ name: 'mediaId', title: 'ID do post no Instagram', type: 'string', group: 'publicacao', readOnly: true, hidden: true }),
     // Controle das notificações no celular
     defineField({ name: 'notifiedAt', title: 'Isa avisada em', type: 'datetime', group: 'publicacao', readOnly: true, hidden: true }),
