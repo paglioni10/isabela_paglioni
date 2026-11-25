@@ -56,6 +56,13 @@ export default function PrivacyPage() {
           .
         </p>
         <p>
+          <strong className="text-gray-900">Contador de visitas, sem cookies.</strong> O próprio site
+          conta quantas visitas recebe e quantos cliques há nos botões de WhatsApp, por dia, com o
+          botão clicado e a origem da visita (Instagram, Google, acesso direto e outras). Ele não
+          grava endereço IP nem nada que identifique você: guarda só os totais. Para não contar a
+          mesma visita duas vezes, o navegador lembra a origem da visita até você fechar a aba.
+        </p>
+        <p>
           <strong className="text-gray-900">Hospedagem.</strong> O site fica na Vercel, que registra
           dados técnicos de acesso, como endereço IP e navegador, para manter o site no ar e seguro.
           As fotos são entregues pelo serviço de conteúdo Sanity.

@@ -14,7 +14,8 @@ import {schema} from './src/sanity/schemaTypes'
 import {structure} from './src/sanity/structure'
 import {StudioIcon, StudioLogo} from './src/sanity/components/StudioLogo'
 import {ApprovalTool} from './src/sanity/tools/ApprovalTool'
-import {CheckCircle2} from 'lucide-react'
+import {MetricsTool} from './src/sanity/tools/MetricsTool'
+import {BarChart3, CheckCircle2} from 'lucide-react'
 
 // Cores da identidade visual do site
 const pink = '#DB2777'
@@ -73,6 +74,7 @@ export default defineConfig({
   // "Aprovar posts" vem primeiro: é a tela que abre no app do celular
   tools: (prev) => [
     {name: 'aprovar', title: 'Aprovar posts', icon: CheckCircle2, component: ApprovalTool},
+    {name: 'metricas', title: 'Métricas', icon: BarChart3, component: MetricsTool},
     ...prev,
   ],
 })
