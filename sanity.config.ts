@@ -7,6 +7,7 @@
 import {visionTool} from '@sanity/vision'
 import {buildLegacyTheme, defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
+import {ptBRLocale} from '@sanity/locale-pt-br'
 
 // Go to https://www.sanity.io/docs/api-versioning to learn how API versioning works
 import {apiVersion, dataset, projectId} from './src/sanity/env'
@@ -67,6 +68,8 @@ export default defineConfig({
     ],
   },
   plugins: [
+    // Painel em português do Brasil (pacote oficial do Sanity)
+    ptBRLocale(),
     structureTool({structure, title: 'Conteúdo do site'}),
     // Vision (consultas GROQ) só aparece em desenvolvimento, para não confundir no painel
     ...(process.env.NODE_ENV === 'development' ? [visionTool({defaultApiVersion: apiVersion})] : []),
