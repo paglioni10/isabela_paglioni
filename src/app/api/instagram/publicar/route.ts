@@ -36,6 +36,8 @@ type Doc = {
   caption?: string
   containerId?: string
   carouselItems?: string[]
+  tags?: string[]
+  collab?: boolean
   sentAt?: string
   media?: { _type: 'image' | 'file'; url?: string }[]
   coverUrl?: string
@@ -155,7 +157,7 @@ export async function GET(request: Request) {
 
   // 1. Posts em processamento (vídeos e carrosséis, que a Meta processa aos poucos)
   const processing = await sanity.fetch<Doc[]>(
-    `*[_type == "instagramPost" && status == "publicando"]{ _id, format, caption, containerId, carouselItems, sentAt }`
+    `*[_type == "instagramPost" && status == "publicando"]{ _id, format, caption, containerId, carouselItems, tags, collab, sentAt }`
   )
   // Confere uma vez e volta na próxima chamada: nunca fica esperando
   const checkContainer = async (id: string, containerId: string) => {
@@ -171,7 +173,7 @@ export async function GET(request: Request) {
         if (expired) await fail(doc._id, new Error('O Instagram não terminou de processar o vídeo em 1 hora'))
         else await checkContainer(doc._id, doc.containerId)
       } else if (doc.carouselItems?.length) {
-        const result = await finishCarousel(doc.carouselItems, doc.caption ?? '')
+        const result = await finishCarousel(doc.carouselItems, doc.caption ?? '', { tags: doc.tags, collab: doc.collab })
         if (result === 'processando') {
           if (expired) await fail(doc._id, new Error('O Instagram não terminou de processar os vídeos do carrossel em 1 hora'))
           else report.push({ id: doc._id, result: 'processando os vídeos do carrossel' })
@@ -192,7 +194,7 @@ export async function GET(request: Request) {
   const due = await sanity.fetch<Doc[]>(
     `*[_type == "instagramPost" && status == "aprovado" && (!defined(scheduledAt) || dateTime(scheduledAt) <= dateTime(now()))]
       | order(scheduledAt asc)[0...3]{
-        _id, format, caption,
+        _id, format, caption, tags, collab,
         media[]{ _type, "url": asset->url },
         "coverUrl": cover.asset->url
       }`
@@ -218,14 +220,15 @@ export async function GET(request: Request) {
         .map((m) => (m._type === 'image' ? { type: 'image', url: instagramImageUrl(m.url!) } : { type: 'video', url: m.url! }))
       if (doc.format === 'carrossel' && media.length > 1) {
         // Etapa 1 agora; o contêiner do carrossel é criado quando todos os itens estiverem prontos
-        const carouselItems = await createCarouselItems(media)
+        const people = { tags: doc.tags, collab: doc.collab }
+        const carouselItems = await createCarouselItems(media, people)
         await sanity.patch(doc._id).set({ carouselItems }).commit()
         // Fotos ficam prontas em segundos: até 3 conferências curtas (cerca de 9 s no total).
         // Vídeos que demoram mais ficam para as próximas chamadas do cron.
-        let result = await finishCarousel(carouselItems, doc.caption ?? '')
+        let result = await finishCarousel(carouselItems, doc.caption ?? '', people)
         for (let i = 0; i < 3 && result === 'processando'; i++) {
           await new Promise((ok) => setTimeout(ok, 3000))
-          result = await finishCarousel(carouselItems, doc.caption ?? '')
+          result = await finishCarousel(carouselItems, doc.caption ?? '', people)
         }
         if (result === 'processando') report.push({ id: doc._id, result: 'enviado, processando os vídeos do carrossel' })
         else {
@@ -238,7 +241,8 @@ export async function GET(request: Request) {
         doc.format,
         media,
         doc.caption ?? '',
-        doc.coverUrl ? instagramImageUrl(doc.coverUrl) : undefined
+        doc.coverUrl ? instagramImageUrl(doc.coverUrl) : undefined,
+        { tags: doc.tags, collab: doc.collab }
       )
       await sanity.patch(doc._id).set({ containerId }).commit()
       await checkContainer(doc._id, containerId)

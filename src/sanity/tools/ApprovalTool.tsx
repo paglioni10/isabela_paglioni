@@ -13,12 +13,14 @@ type Post = {
   caption?: string
   reason?: string
   media?: Media[]
+  tags?: string[]
+  collab?: boolean
   hasDraft?: boolean
 }
 type Upcoming = { _id: string; format?: string; scheduledAt?: string; caption?: string }
 
 const PENDING = `*[_type == "instagramPost" && status == "aguardando" && !(_id in path("drafts.**"))] | order(scheduledAt asc){
-  _id, format, scheduledAt, caption, reason,
+  _id, format, scheduledAt, caption, reason, tags, collab,
   media[]{ _key, _type, "url": asset->url, "mime": asset->mimeType },
   "hasDraft": defined(*[_id == "drafts." + ^._id][0]._id)
 }`
@@ -162,6 +164,15 @@ function PostCard({ post, onDone }: { post: Post; onDone: () => void }) {
               {when(post.scheduledAt)}
             </Text>
           </Flex>
+
+          {post.tags && post.tags.length > 0 && (
+            <Card padding={3} radius={3} tone="primary" border>
+              <Text size={1}>
+                <strong>Marca:</strong> {post.tags.map((t) => '@' + t.trim().replace(/^@/, '')).join(', ')}
+                {post.collab && post.format !== 'story' ? ' · com convite de colaboração (o post aparece também no perfil dela)' : ''}
+              </Text>
+            </Card>
+          )}
 
           {editing ? (
             <TextArea

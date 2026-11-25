@@ -89,6 +89,31 @@ export default defineType({
       validation: (r) => r.max(2200),
     }),
     defineField({
+      name: 'tags',
+      title: 'Marcar no post',
+      description:
+        'Perfil da cliente, como @nome (perfil público). Só marque quem autorizou ser marcada: a marcação liga a casa à pessoa.',
+      type: 'array',
+      of: [{ type: 'string' }],
+      group: 'post',
+      options: { layout: 'tags' },
+      validation: (r) =>
+        r.max(10).custom((tags?: string[]) => {
+          const bad = (tags ?? []).find((t) => !/^@?[A-Za-z0-9._]{1,30}$/.test(t.trim()))
+          return bad ? `"${bad}" não parece um perfil do Instagram` : true
+        }),
+    }),
+    defineField({
+      name: 'collab',
+      title: 'Convidar como colaboradora',
+      description:
+        'O post aparece também no perfil de quem foi marcado (até 3), depois que a pessoa aceitar o convite no app. Não funciona em story.',
+      type: 'boolean',
+      group: 'post',
+      initialValue: false,
+      hidden: ({ document }) => document?.format === 'story' || !(document?.tags as string[] | undefined)?.length,
+    }),
+    defineField({
       name: 'reason',
       title: 'Por que este post',
       description: 'Explicação da equipe: objetivo do post e por que estas fotos.',
