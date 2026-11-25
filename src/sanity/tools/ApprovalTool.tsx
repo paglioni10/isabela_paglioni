@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { useClient, useCurrentUser } from 'sanity'
-import { Badge, Box, Button, Card, Container, Flex, Heading, Spinner, Stack, Text, TextArea, useToast } from '@sanity/ui'
+import { Badge, Box, Button, Card, Checkbox, Container, Flex, Heading, Spinner, Stack, Text, TextArea, useToast } from '@sanity/ui'
 import { POST_FORMATS } from '../schemaTypes/instagramPost'
 
 type Media = { _key: string; _type: 'image' | 'file'; url?: string; mime?: string }
@@ -409,6 +409,8 @@ function NotificationToggle() {
   const toast = useToast()
   const [state, setState] = useState<PushState>('checking')
   const [busy, setBusy] = useState(false)
+  const [docId, setDocId] = useState<string | null>(null)
+  const [equipe, setEquipe] = useState(false)
 
   useEffect(() => {
     if (!VAPID_PUBLIC_KEY) return
@@ -425,9 +427,15 @@ function NotificationToggle() {
     navigator.serviceWorker
       .register(SW_URL, { scope: '/admin/' })
       .then((reg) => reg.pushManager.getSubscription())
-      .then((sub) => setState(sub && Notification.permission === 'granted' ? 'on' : 'off'))
+      .then(async (sub) => {
+        if (!sub || Notification.permission !== 'granted') return setState('off')
+        const id = await subscriptionId(sub.endpoint)
+        setDocId(id)
+        setEquipe(Boolean(await client.fetch<boolean | null>(`*[_id == $id][0].equipe`, { id })))
+        setState('on')
+      })
       .catch(() => setState('unsupported'))
-  }, [])
+  }, [client])
 
   const enable = async () => {
     setBusy(true)
@@ -444,17 +452,24 @@ function NotificationToggle() {
         (await reg.pushManager.getSubscription()) ??
         (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: base64ToBytes(VAPID_PUBLIC_KEY!) }))
       const json = sub.toJSON()
-      await client.createOrReplace({
-        _id: await subscriptionId(sub.endpoint),
-        _type: 'pushSubscription',
-        endpoint: sub.endpoint,
-        keys: { p256dh: json.keys?.p256dh, auth: json.keys?.auth },
-        userId: user?.id,
-        userName: user?.name,
-        isAdmin: Boolean(user?.roles?.some((r) => r.name === 'administrator')),
-        device: navigator.userAgent.slice(0, 200),
-        createdAt: new Date().toISOString(),
-      })
+      const id = await subscriptionId(sub.endpoint)
+      // Reativar mantém a escolha de "avisos da equipe" que o aparelho já tinha
+      await client
+        .transaction()
+        .createIfNotExists({ _id: id, _type: 'pushSubscription', equipe: false })
+        .patch(id, (p) =>
+          p.set({
+            endpoint: sub.endpoint,
+            keys: { p256dh: json.keys?.p256dh, auth: json.keys?.auth },
+            userId: user?.id,
+            userName: user?.name,
+            device: navigator.userAgent.slice(0, 200),
+            createdAt: new Date().toISOString(),
+          })
+        )
+        .commit()
+      setDocId(id)
+      setEquipe(Boolean(await client.fetch<boolean | null>(`*[_id == $id][0].equipe`, { id })))
       await reg.showNotification('Notificações ativadas', {
         body: 'Você vai receber um aviso quando tiver post para aprovar.',
         icon: '/painel/icon-192.png',
@@ -486,14 +501,31 @@ function NotificationToggle() {
 
   if (!VAPID_PUBLIC_KEY || state === 'checking' || state === 'unsupported') return null
 
+  const toggleEquipe = async (value: boolean) => {
+    if (!docId) return
+    setEquipe(value)
+    try {
+      await client.patch(docId).set({ equipe: value }).commit()
+    } catch (err) {
+      setEquipe(!value)
+      toast.push({ status: 'error', title: 'Não deu para salvar', description: String((err as Error).message ?? err) })
+    }
+  }
+
   if (state === 'on') {
     return (
-      <Flex align="center" justify="space-between" gap={3}>
-        <Text size={1} muted>
-          🔔 Notificações ativadas neste aparelho
-        </Text>
-        <Button mode="bleed" fontSize={1} padding={2} text="Desativar" disabled={busy} onClick={disable} />
-      </Flex>
+      <Stack space={3}>
+        <Flex align="center" justify="space-between" gap={3}>
+          <Text size={1} muted>
+            🔔 Notificações ativadas neste aparelho
+          </Text>
+          <Button mode="bleed" fontSize={1} padding={2} text="Desativar" disabled={busy} onClick={disable} />
+        </Flex>
+        <label style={{ display: 'flex', gap: 10, alignItems: 'flex-start', cursor: 'pointer' }}>
+          <Checkbox checked={equipe} disabled={!docId} onChange={(e) => toggleEquipe(e.currentTarget.checked)} />
+          <Text size={1}>Receber também os avisos da equipe (publicado, erro, pedido de ajuste)</Text>
+        </label>
+      </Stack>
     )
   }
 

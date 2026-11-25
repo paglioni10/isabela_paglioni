@@ -75,7 +75,7 @@ export async function GET(request: Request) {
     const message = err instanceof Error ? err.message : String(err)
     await sanity.patch(id).set({ status: 'erro', error: message }).commit()
     report.push({ id, result: `erro: ${message}` })
-    await notify(sanity, { title: 'Erro ao publicar', body: message.slice(0, 140), tag: `erro-${id}` }, 'admins')
+    await notify(sanity, { title: 'Erro ao publicar', body: message.slice(0, 140), tag: `erro-${id}` }, 'equipe')
   }
   const done = async (id: string, containerId: string) => {
     const { mediaId, permalink } = await publishContainer(containerId)
@@ -85,7 +85,7 @@ export async function GET(request: Request) {
       .unset(['error'])
       .commit()
     report.push({ id, result: `publicado ${permalink ?? mediaId}` })
-    await notify(sanity, { title: 'Post publicado ✓', body: 'Já está no Instagram.', url: permalink, tag: `ok-${id}` }, 'admins')
+    await notify(sanity, { title: 'Post publicado ✓', body: 'Já está no Instagram.', url: permalink, tag: `ok-${id}` }, 'equipe')
   }
 
   // 0. Avisa no celular sobre posts novos para aprovar e lembra dos parados há 1 dia.
@@ -142,7 +142,7 @@ export async function GET(request: Request) {
           url: `/admin/intent/edit/id=${d._id};type=instagramPost/`,
           tag: `ajuste-${d._id}`,
         },
-        'admins'
+        'equipe'
       )
       if (error) {
         report.push({ id: d._id, result: `aviso de ajuste não enviado: ${error}` })

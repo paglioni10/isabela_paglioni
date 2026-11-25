@@ -37,7 +37,7 @@ O projeto tem três partes que compartilham o mesmo código e o mesmo deploy:
 - **Instagram:** fila de posts separada por etapa: para aprovar, ajustes pedidos, agendados, publicados, erros e rascunhos da equipe.
 - **Tela "Aprovar posts",** pensada para celular. A Isa vê as fotos e os vídeos como no Instagram, edita a legenda e aprova ou pede ajuste. A tela se atualiza sozinha.
 - **App no celular:** o painel pode ser instalado na tela inicial (PWA) e abre direto na aprovação.
-- **Notificações (Web Push):** quem ativa no app recebe um aviso quando chega post para aprovar e um lembrete se ele ficar parado por 24 horas. Administradores também recebem "publicado" e "erro ao publicar". No iPhone, funciona com o app aberto pelo ícone da tela inicial (iOS 16.4 ou mais recente).
+- **Notificações (Web Push):** quem ativa no app recebe um aviso quando chega post para aprovar e um lembrete se ele ficar parado por 24 horas. Quem marca "receber também os avisos da equipe" no app recebe ainda "publicado", "erro ao publicar" e "pedido de ajuste". No iPhone, funciona com o app aberto pelo ícone da tela inicial (iOS 16.4 ou mais recente).
 
 ### Publicação automática no Instagram
 - O endpoint `GET /api/instagram/publicar` é chamado a cada 15 minutos por um agendador externo e é protegido por `CRON_SECRET`.

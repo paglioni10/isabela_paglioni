@@ -10,7 +10,7 @@ type Subscription = {
   _id: string
   endpoint: string
   keys: { p256dh: string; auth: string }
-  isAdmin?: boolean
+  equipe?: boolean
 }
 
 let configured = false
@@ -26,19 +26,20 @@ function configure() {
 }
 
 /**
- * Envia para todos os aparelhos inscritos, ou só para os de administradores.
+ * Envia para todos os aparelhos inscritos, ou só para os que marcaram
+ * "receber também os avisos da equipe" no app.
  * Nunca lança erro: notificação falhar não pode travar a publicação.
  * Devolve quantos aparelhos receberam e, se deu errado, o motivo.
  */
 export async function notify(
   sanity: SanityClient,
   payload: PushPayload,
-  only: 'todos' | 'admins' = 'todos'
+  only: 'todos' | 'equipe' = 'todos'
 ): Promise<{ sent: number; error?: string }> {
   try {
     configure()
-    const filter = only === 'admins' ? ' && isAdmin == true' : ''
-    const subs = await sanity.fetch<Subscription[]>(`*[_type == "pushSubscription"${filter}]{ _id, endpoint, keys, isAdmin }`)
+    const filter = only === 'equipe' ? ' && equipe == true' : ''
+    const subs = await sanity.fetch<Subscription[]>(`*[_type == "pushSubscription"${filter}]{ _id, endpoint, keys }`)
     const body = JSON.stringify({ url: '/admin/aprovar', ...payload })
     let sent = 0
     const failures: string[] = []
